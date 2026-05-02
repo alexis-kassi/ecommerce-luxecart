@@ -14,6 +14,9 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@300;400;500&display=swap"
         rel="stylesheet">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%236366f1'/><text y='72' x='50' text-anchor='middle' font-family='Arial, sans-serif' font-weight='bold' font-size='65' fill='white'>L</text></svg>">
+
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -30,7 +33,7 @@
 
     @if(request()->routeIs('home'))
         <div style="background-color: #0f172a; color: white; padding: 10px 0; overflow: hidden; white-space: nowrap; 
-                    font-size: 0.95rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">
+                        font-size: 0.95rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">
             <div
                 style="display: inline-block; white-space: nowrap; animation: marquee-ltr 90s linear infinite; width: max-content;">
                 <span style="margin: 0 50px;">Bienvenue sur luxeCart la boutique des meilleurs collections</span>
