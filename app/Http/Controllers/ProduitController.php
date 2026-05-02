@@ -15,10 +15,10 @@ class ProduitController extends Controller
         $category = $request->query('category');
         
         if ($category) {
-            $produits = Produit::where('categorie', $category)->get();
+            $produits = Produit::where('categorie', $category)->take(3)->get();
         } else {
-            // Sur l'accueil, on peut choisir d'afficher seulement 8 produits par exemple
-            $produits = Produit::take(8)->get();
+            // Sur l'accueil, on affiche seulement 3 produits
+            $produits = Produit::take(3)->get();
         }
 
         return view('welcome', compact('produits', 'category'));

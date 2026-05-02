@@ -1,0 +1,89 @@
+/* Page Nouveautés - Disposition Boutique Épurée */
+.nouveautes-page {
+    padding-top: 30px;
+    background-color: #fff;
+}
+
+.nouveautes-hero {
+    padding: 0 0 30px;
+    text-align: left; /* Alignement à gauche pour un look plus moderne */
+    border-bottom: 1px solid #eee;
+    margin-bottom: 40px;
+}
+
+.nouveautes-hero .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.nouveautes-hero h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--dark);
+    margin: 0;
+    font-family: var(--font-outfit);
+    position: relative;
+}
+
+.nouveautes-hero h1::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 4px;
+    background: var(--primary);
+    margin-top: 10px;
+}
+
+.nouveautes-hero p {
+    font-size: 1rem;
+    color: var(--gray);
+    margin: 0;
+    max-width: 450px;
+}
+
+.nouveautes-products {
+    padding-bottom: 100px;
+}
+
+/* Grille de produits optimisée */
+.nouveautes-products .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.nouveautes-products .product-card {
+    transition: transform 0.3s ease;
+}
+
+.nouveautes-products .product-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nouveautes-page {
+        padding-top: 20px;
+    }
+    
+    .nouveautes-hero {
+        text-align: center;
+    }
+    
+    .nouveautes-hero .container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .nouveautes-hero h1::after {
+        margin: 10px auto 0;
+    }
+    
+    .nouveautes-hero h1 {
+        font-size: 1.8rem;
+    }
+}

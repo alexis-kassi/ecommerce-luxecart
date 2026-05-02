@@ -11,6 +11,8 @@ class ProduitSeeder extends Seeder
     /**
      * Run the database seeds.
      */
+
+    // PRODUITS RECENTS
     public function run(): void
     {
         Produit::create([
@@ -31,6 +33,50 @@ class ProduitSeeder extends Seeder
             'image' => 'images/imgOrdinateur1.jpg'
         ]);
 
+        Produit::create([
+            'nom' => 'Montre de Luxe',
+            'description'=> 'Une montre élégante pour toutes occasions, déjà disponible pour vous.',
+            'prix' => '120000',
+            'stock' => '6',
+            'categorie'=> 'Accessoires Mode',
+            'image' => 'images/imgMontre.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Montre Connectée',
+            'description' => 'Une montre connectée très performante',
+            'prix' => '145000',
+            'stock' => '5',
+            'categorie' => 'Accessoires Mode',
+            'image' => 'images/imgMontreConnectee.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Sac à main homme',
+            'description' => 'Sac à main très complet',
+            'prix' => '30000',
+            'stock' => '7',
+            'categorie' => 'Accessoires Mode',
+            'image' => 'images/imgSacAMainHomme.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Sac à main Dame',
+            'description' => 'Sac à main Dame, disponible pour vous, très solide et très pratique',
+            'prix' => '32000',
+            'stock' => '4',
+            'categorie' => 'Accessoires Mode',
+            'image' => 'images/imgSacAMainDame.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Sac à dos',
+            'description' => 'Sac à dos disponible pour vous, bien solide et très pratique.',
+            'prix' => '45000',
+            'stock' => '7',
+            'categorie' => 'Accessoires Mode',
+            'image' => 'images/imgSacADos.jpg'
+        ]);
         Produit::create([
             'nom' => 'T-shirt',
             'description' => 'T-shirt en coton très solid',
@@ -66,5 +112,43 @@ class ProduitSeeder extends Seeder
             'categorie' => 'Chaussure',
             'image' => 'images/imgChaussureAdidas.jpg'
         ]);
+
+        // LES NOUVEAUX PRODUITS
+        Produit::create([
+            'nom' => 'lunette',
+            'description' => 'Structure tenant les verres, fabriquée en métal, plastique (acétate) ou matériaux mixtes.',
+            'prix' => 35000,
+            'stock'=> 5,
+            'categorie' => 'Nouveautés',
+            'image' => 'images/lunette1.jpg',
+        ]);
+
+         Produit::create([
+            'nom' => 'lunette',
+            'description' => 'Structure tenant les verres, fabriquée en métal, plastique (acétate) ou matériaux mixtes.',
+            'prix' => 34000,
+            'stock'=> 3,
+            'categorie' => 'Nouveautés',
+            'image' => 'images/lunette2.jpg',
+        ]);
+
+        Produit::create([
+            'nom' => 'Portefeuille',
+            'description' => 'Un portefeuille très spacieux et solide',
+            'prix' => 4000,
+            'stock' => 3,
+            'categorie' => 'Nouveautés',
+            'image' => 'images/portf1.jpg',
+        ]);
+
+        Produit::create([
+            'nom' => 'Portefeuille',
+            'description' => 'Un portefeuille très spacieux et solide',
+            'prix' => 4500,
+            'stock' => 3,
+            'categorie' => 'Nouveautés',
+            'image' => 'images/portf2.jpg',
+        ]);
+
     }
 }
