@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Création de la table des commandes
         Schema::create('orders', function (Blueprint $blueprint) {
             $blueprint->id();
             $blueprint->string('nom');
@@ -24,6 +25,7 @@ return new class extends Migration
             $blueprint->timestamps();
         });
 
+        // Création de la table des items de commandes
         Schema::create('order_items', function (Blueprint $blueprint) {
             $blueprint->id();
             $blueprint->foreignId('order_id')->constrained()->onDelete('cascade');

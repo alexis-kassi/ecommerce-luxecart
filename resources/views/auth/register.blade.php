@@ -11,6 +11,27 @@
                 <p style="color: var(--gray);">Créez votre compte pour profiter de LuxeCart.</p>
             </div>
 
+            @if(session('info'))
+                <div style="background: #eff6ff; color: #1e40af; padding: 1rem 1.25rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid #bfdbfe; font-size: 0.92rem; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fa-solid fa-circle-info" style="font-size: 1.1rem; color: #3b82f6;"></i>
+                    <span>{{ session('info') }}</span>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div style="background: #fee2e2; color: #b91c1c; padding: 1rem 1.25rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid #fecaca; font-size: 0.92rem; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.1rem; color: #ef4444;"></i>
+                    <span>{{ session('error') }}</span>
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div style="background: #ecfdf5; color: #065f46; padding: 1rem 1.25rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid #a7f3d0; font-size: 0.92rem; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fa-solid fa-circle-check" style="font-size: 1.1rem; color: #10b981;"></i>
+                    <span>{{ session('success') }}</span>
+                </div>
+            @endif
+
             @if($errors->any())
                 <div
                     style="background: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid #fecaca; font-size: 0.9rem;">

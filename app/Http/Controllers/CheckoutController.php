@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Produit;
@@ -12,26 +13,28 @@ class CheckoutController extends Controller
 {
     public function index()
     {
-        $cart = session()->get('cart', []);
-        
-        if (empty($cart)) {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('info', 'Veuillez vous connecter ou vous inscrire pour passer commande.');
+        }
+
+        $sessionId = session()->getId();
+        $cartRows  = Cart::where('session_id', $sessionId)->with('produit')->get();
+
+        if ($cartRows->isEmpty()) {
             return redirect()->route('cart.index')->with('error', 'Votre panier est vide.');
         }
 
         $items = [];
         $total = 0;
-        
-        $ids = array_keys($cart);
-        $produits_db = Produit::whereIn('id', $ids)->get();
 
-        foreach ($produits_db as $produit) {
-            $quantite = $cart[$produit->id];
-            $subtotal = $produit->prix * $quantite;
-            $total += $subtotal;
-            $items[] = [
-                'produit' => $produit,
-                'quantite' => $quantite,
-                'subtotal' => $subtotal
+        foreach ($cartRows as $row) {
+            if (!$row->produit) continue;
+            $subtotal = $row->produit->prix * $row->quantite;
+            $total   += $subtotal;
+            $items[]  = [
+                'produit'  => $row->produit,
+                'quantite' => $row->quantite,
+                'subtotal' => $subtotal,
             ];
         }
 
@@ -40,60 +43,62 @@ class CheckoutController extends Controller
 
     public function process(Request $request)
     {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Vous devez être connecté pour confirmer votre commande.');
+        }
+
         $request->validate([
-            'nom' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'telephone' => 'required|string|max:20',
-            'adresse' => 'required|string|max:500',
-            'ville' => 'required|string|max:100',
-            'methode_paiement' => 'required|string'
+            'nom'              => 'required|string|max:255',
+            'email'            => 'required|email|max:255',
+            'telephone'        => 'required|string|max:20',
+            'adresse'          => 'required|string|max:500',
+            'ville'            => 'required|string|max:100',
+            'methode_paiement' => 'required|string',
         ]);
 
-        $cart = session()->get('cart', []);
-        
-        if (empty($cart)) {
+        $sessionId = session()->getId();
+        $cartRows  = Cart::where('session_id', $sessionId)->with('produit')->get();
+
+        if ($cartRows->isEmpty()) {
             return redirect()->route('home')->with('error', 'Panier vide.');
         }
 
         try {
             DB::beginTransaction();
 
-            // Calculate total again for security
             $total = 0;
-            $ids = array_keys($cart);
-            $produits_db = Produit::whereIn('id', $ids)->get();
-            
+
             $order = Order::create([
-                'nom' => $request->nom,
-                'email' => $request->email,
-                'telephone' => $request->telephone,
-                'adresse' => $request->adresse,
-                'ville' => $request->ville,
+                'user_id'          => auth()->id(),
+                'nom'              => $request->nom,
+                'email'            => $request->email,
+                'telephone'        => $request->telephone,
+                'adresse'          => $request->adresse,
+                'ville'            => $request->ville,
                 'methode_paiement' => $request->methode_paiement,
-                'total' => 0, // Placeholder
-                'statut' => 'en_attente'
+                'total'            => 0, // recalculé ci-dessous
+                'statut'           => 'en_attente',
             ]);
 
-            foreach ($produits_db as $produit) {
-                $quantite = $cart[$produit->id];
-                $subtotal = $produit->prix * $quantite;
-                $total += $subtotal;
+            foreach ($cartRows as $row) {
+                if (!$row->produit) continue;
+                $subtotal = $row->produit->prix * $row->quantite;
+                $total   += $subtotal;
 
                 OrderItem::create([
-                    'order_id' => $order->id,
-                    'produit_id' => $produit->id,
-                    'quantite' => $quantite,
-                    'prix_unitaire' => $produit->prix
+                    'order_id'      => $order->id,
+                    'produit_id'    => $row->produit->id,
+                    'quantite'      => $row->quantite,
+                    'prix_unitaire' => $row->produit->prix,
                 ]);
             }
 
-            // Update total
             $order->update(['total' => $total]);
 
             DB::commit();
 
-            // Clear Cart
-            session()->forget('cart');
+            // Vider le panier en base
+            Cart::where('session_id', $sessionId)->delete();
 
             return redirect()->route('checkout.success', $order->id);
 

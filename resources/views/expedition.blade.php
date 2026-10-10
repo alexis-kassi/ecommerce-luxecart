@@ -9,10 +9,12 @@
     
     <div class="container animate-fade-up" style="position: relative; z-index: 1;">
         <span style="background: rgba(255,255,255,0.1); padding: 0.5rem 1.5rem; border-radius: 50px; font-size: 0.9rem; font-weight: 600; letter-spacing: 1px; margin-bottom: 1.5rem; display: inline-block; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);">INFORMATIONS</span>
-        <h1 style="font-family: var(--font-outfit); font-size: 3.5rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.2;">Politique d'<span style="background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Expédition</span></h1>
+        <h1 style="font-family: var(--font-outfit); font-size: 3.5rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.2;">Politique d'Expédition</h1>
         <p style="font-size: 1.1rem; color: #94a3b8; max-width: 600px; margin: 0 auto;">Recevez vos articles rapidement et en toute sécurité. Découvrez nos modes de livraison, nos tarifs et nos délais.</p>
     </div>
 </div>
+
+
 
 <div class="container" style="padding: 5rem 2rem;">
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem;">

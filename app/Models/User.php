@@ -46,4 +46,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /** Commandes passées par cet utilisateur */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    /** Lignes de panier de cet utilisateur */
+    public function cartItems()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

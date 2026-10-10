@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Création de la table des newsletters
         Schema::create('newsletters', function (Blueprint $blueprint) {
             $blueprint->id();
             $blueprint->string('email')->unique();

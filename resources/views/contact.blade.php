@@ -157,6 +157,8 @@
         </div>
     </div>
 
+    
+
     <!-- Ajout pour assurer l'animation pour les écrans mobiles -->
     <style>
         @media (max-width: 991px) {
@@ -165,6 +167,8 @@
             }
         }
     </style>
+
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const elements = document.querySelectorAll('.animate-fade-up');

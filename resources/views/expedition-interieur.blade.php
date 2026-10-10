@@ -5,7 +5,7 @@
 <div style="background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%); padding: 5rem 2rem; text-align: center; color: white; position: relative; overflow: hidden;">
     <div style="position: absolute; top: -50%; left: -10%; width: 50%; height: 200%; background: radial-gradient(circle, var(--secondary) 0%, transparent 70%); opacity: 0.15; filter: blur(60px);"></div>
     <div class="container animate-fade-up" style="position: relative; z-index: 1;">
-        <h1 style="font-family: var(--font-outfit); font-size: 3rem; font-weight: 700; margin-bottom: 1rem;">Livraison à <span style="background: linear-gradient(90deg, var(--secondary), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">l'Intérieur</span></h1>
+        <h1 style="font-family: var(--font-outfit); font-size: 3rem; font-weight: 700; margin-bottom: 1rem;">Livraison à <span style="font-size: 3rem;">l'Intérieur</span></h1>
         <p style="font-size: 1.1rem; color: #94a3b8; max-width: 600px; margin: 0 auto;">Informations sur l'expédition de vos colis dans les villes de l'intérieur de la Côte d'Ivoire.</p>
     </div>
 </div>

@@ -10,6 +10,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'nom',
         'email',
         'telephone',
@@ -19,6 +20,12 @@ class Order extends Model
         'statut',
         'methode_paiement'
     ];
+
+    /** Utilisateur connecté ayant passé la commande (null si invité) */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function items()
     {

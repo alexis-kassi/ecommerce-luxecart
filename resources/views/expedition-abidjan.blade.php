@@ -5,10 +5,12 @@
 <div style="background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%); padding: 5rem 2rem; text-align: center; color: white; position: relative; overflow: hidden;">
     <div style="position: absolute; top: -50%; left: -10%; width: 50%; height: 200%; background: radial-gradient(circle, var(--primary) 0%, transparent 70%); opacity: 0.15; filter: blur(60px);"></div>
     <div class="container animate-fade-up" style="position: relative; z-index: 1;">
-        <h1 style="font-family: var(--font-outfit); font-size: 3rem; font-weight: 700; margin-bottom: 1rem;">Livraison à <span style="background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Abidjan</span></h1>
+        <h1 style="font-family: var(--font-outfit); font-size: 3rem; font-weight: 700; margin-bottom: 1rem;">Livraison à Abidjan</h1>
         <p style="font-size: 1.1rem; color: #94a3b8; max-width: 600px; margin: 0 auto;">Détails et conditions de livraison pour Abidjan et ses communes environnantes.</p>
     </div>
 </div>
+
+
 
 <div class="container animate-fade-up" style="padding: 5rem 2rem; max-width: 800px; margin: 0 auto;">
     <div style="background: var(--card-bg); padding: 4rem; border-radius: 30px; box-shadow: var(--shadow); border: 1px solid var(--glass-border);">

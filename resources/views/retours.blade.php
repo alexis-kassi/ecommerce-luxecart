@@ -28,6 +28,7 @@
         </div>
     </div>
 
+
     <div class="container" style="padding: 5rem 2rem;">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem;">
 
@@ -107,6 +108,7 @@
             </a>
         </div>
     </div>
+    
 
     <script>
         /* Assurer que les animations se déclenchent correctement au chargement */

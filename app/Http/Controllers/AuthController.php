@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,8 +32,16 @@ class AuthController extends Controller
             'password.required' => 'Le mot de passe est requis.'
         ]);
 
+        $oldSessionId = session()->getId();
+
         if (Auth::attempt($credentials, $request->has('remember'))) {
             $request->session()->regenerate();
+            $newSessionId = session()->getId();
+
+            // Migrer les produits du panier invité vers la session connectée
+            $this->migrateGuestCart($oldSessionId, $newSessionId, Auth::id());
+
+            // Redirection vers la page prévue (ex: checkout) ou l'accueil
             return redirect()->intended(route('home'))->with('success', 'Heureux de vous revoir !');
         }
 
@@ -67,6 +76,8 @@ class AuthController extends Controller
             'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.'
         ]);
 
+        $oldSessionId = session()->getId();
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -74,8 +85,38 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+        $request->session()->regenerate();
+        $newSessionId = session()->getId();
 
-        return redirect()->route('home')->with('success', 'Bienvenue chez LuxeCart !');
+        // Migrer les produits du panier invité vers la session connectée
+        $this->migrateGuestCart($oldSessionId, $newSessionId, $user->id);
+
+        return redirect()->intended(route('home'))->with('success', 'Bienvenue chez LuxeCart !');
+    }
+
+    /**
+     * Transférer le panier d'un invité vers son compte nouvellement connecté.
+     */
+    private function migrateGuestCart(string $oldSessionId, string $newSessionId, int $userId): void
+    {
+        $guestItems = Cart::where('session_id', $oldSessionId)->get();
+
+        foreach ($guestItems as $guestItem) {
+            $existing = Cart::where('session_id', $newSessionId)
+                ->where('produit_id', $guestItem->produit_id)
+                ->first();
+
+            if ($existing) {
+                $existing->increment('quantite', $guestItem->quantite);
+                $existing->update(['user_id' => $userId]);
+                $guestItem->delete();
+            } else {
+                $guestItem->update([
+                    'session_id' => $newSessionId,
+                    'user_id'    => $userId,
+                ]);
+            }
+        }
     }
 
     /**

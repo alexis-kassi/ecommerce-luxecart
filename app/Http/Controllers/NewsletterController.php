@@ -12,11 +12,14 @@ class NewsletterController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:255|unique:newsletters,email',
-        ], [
+        ], 
+        
+        [
             'email.required' => 'Votre adresse email est obligatoire.',
             'email.email' => 'Veuillez saisir une adresse email valide.',
             'email.unique' => 'Cette adresse email est déjà inscrite à notre newsletter.',
         ]);
+        
 
         if ($validator->fails()) {
             return response()->json([

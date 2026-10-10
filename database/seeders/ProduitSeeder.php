@@ -34,6 +34,33 @@ class ProduitSeeder extends Seeder
         ]);
 
         Produit::create([
+            'nom' => 'Casque Audio Sans Fil',
+            'description' => 'Casque Bluetooth haute fidélité avec réduction active de bruit.',
+            'prix' => 75000,
+            'stock' => 8,
+            'categorie' => 'Électronique',
+            'image' => 'images/imgCasqueAudio.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Tablette Tactile Pro',
+            'description' => 'Tablette tactile ultra-fine avec écran haute définition et stylet.',
+            'prix' => 220000,
+            'stock' => 6,
+            'categorie' => 'Électronique',
+            'image' => 'images/imgTablette.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Enceinte Bluetooth',
+            'description' => 'Enceinte sans fil compacte, son immersif à 360° et grande autonomie.',
+            'prix' => 45000,
+            'stock' => 12,
+            'categorie' => 'Électronique',
+            'image' => 'images/imgEnceinte.jpg'
+        ]);
+
+        Produit::create([
             'nom' => 'Montre de Luxe',
             'description'=> 'Une montre élégante pour toutes occasions, déjà disponible pour vous.',
             'prix' => '120000',
@@ -88,12 +115,49 @@ class ProduitSeeder extends Seeder
 
         Produit::create([
             'nom' => 'Chemise',
-            'description' => 'Chemise solide à base du conton',
+            'description' => 'Chemise solide à base du coton',
             'prix' => 6000,
             'stock' => 12,
             'categorie' => 'Vêtement',
             'image' => 'images/imgChemise.jpg'
         ]);
+
+        Produit::create([
+            'nom' => 'Pull en Laine',
+            'description' => 'Pull en laine premium, chaud et confortable, idéal pour les soirées fraîches.',
+            'prix' => 18000,
+            'stock' => 10,
+            'categorie' => 'Vêtement',
+            'image' => 'images/imgPull.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Pantalon Chino',
+            'description' => 'Pantalon chino slim fit, coupe moderne et élégante, parfait pour toutes occasions.',
+            'prix' => 15000,
+            'stock' => 8,
+            'categorie' => 'Vêtement',
+            'image' => 'images/imgPantalon.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Short Casual',
+            'description' => 'Short décontracté en coton léger, confortable pour l\'été.',
+            'prix' => 8000,
+            'stock' => 15,
+            'categorie' => 'Vêtement',
+            'image' => 'images/imgShort.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Robe de Soirée',
+            'description' => 'Robe de soirée élégante, tissu fluide et raffiné, parfaite pour toutes vos occasions spéciales.',
+            'prix' => 35000,
+            'stock' => 6,
+            'categorie' => 'Vêtement',
+            'image' => 'images/imgRobe.jpg'
+        ]);
+
 
         Produit::create([
             'nom' => ' Chaussure Nike',
@@ -148,6 +212,24 @@ class ProduitSeeder extends Seeder
             'stock' => 3,
             'categorie' => 'Nouveautés',
             'image' => 'images/portf2.jpg',
+        ]);
+
+        Produit::create([
+            'nom' => 'Claquettes Ergonomiques Confort',
+            'description' => 'Claquettes légères et stylées avec semelle amortissante antidérapante, confort absolu au quotidien.',
+            'prix' => 15000,
+            'stock' => 12,
+            'categorie' => 'Chaussure',
+            'image' => 'images/claquettes.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Mixeur Blender Électrique Inox',
+            'description' => 'Mixeur blender haute performance en acier inoxydable avec bol gradué et lames ultra-résistantes.',
+            'prix' => 38000,
+            'stock' => 8,
+            'categorie' => 'Électronique',
+            'image' => 'images/mixer.jpg'
         ]);
 
     }

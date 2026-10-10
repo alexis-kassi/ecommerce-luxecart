@@ -5,7 +5,7 @@
     <!-- LES LIENS HEAD -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuxeCart | Votre boutique e-commerce</title>
+    <title>LuxCart | Votre boutique e-commerce</title>
 
     <!-- Google Fonts: Outfit & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,29 +31,6 @@
 
 <body>
 
-    @if(request()->routeIs('home'))
-        <div style="background-color: #0f172a; color: white; padding: 10px 0; overflow: hidden; white-space: nowrap; 
-                        font-size: 0.95rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">
-            <div
-                style="display: inline-block; white-space: nowrap; animation: marquee-ltr 90s linear infinite; width: max-content;">
-                <span style="margin: 0 50px;">Bienvenue sur luxeCart la boutique des meilleurs collections</span>
-                <span style="margin: 0 50px;">Bienvenue sur luxeCart la boutique des meilleurs collections</span>
-                <span style="margin: 0 50px;">Une collection des produits très fiable</span>
-                <span style="margin: 0 50px;">Bienvenue sur luxeCart la boutique des meilleurs collections Disponible</span>
-            </div>
-        </div>
-        <style>
-            @keyframes marquee-ltr {
-                0% {
-                    transform: translateX(-50%);
-                }
-
-                100% {
-                    transform: translateX(0%);
-                }
-            }
-        </style>
-    @endif
 
     {{-- PARTIE HEADER --}}
     <header class="main-header">
@@ -64,7 +41,7 @@
 
             {{-- Logo du site --}}
             <div class="logo">
-                <a href="/">Luxe<span>CartPro</span></a>
+                <a href="/">Lux<span style="font-size: 3.2rem;">Cart</span></a>
             </div>
 
             {{-- Menu de navigation --}}
@@ -134,7 +111,7 @@
 
                 <a href="{{ route('cart.index') }}" id="nav-cart" class="cart-btn">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="cart-count">{{ array_sum(session()->get('cart', [])) }}</span>
+                    <span class="cart-count">{{ \App\Models\Cart::where('session_id', session()->getId())->sum('quantite') }}</span>
                 </a>
 
                 <div class="desktop-auth">
@@ -172,16 +149,49 @@
 
     {{-- PARTIE FOOTER --}}
     <footer class="main-footer">
+        <!-- Footer Newsletter Section -->
+        <div class="footer-newsletter">
+            <div class="footer-newsletter-card">
+                <div class="footer-newsletter-info">
+                    <span class="footer-newsletter-tag">
+                        <i class="fa-regular fa-paper-plane"></i> Club Privilège
+                    </span>
+                    <h3 class="footer-newsletter-title">Restons Connectés</h3>
+                    <p class="footer-newsletter-desc">
+                        Abonnez-vous à notre newsletter pour recevoir en exclusivité nos offres spéciales, nos ventes privées et nos nouvelles collections.
+                    </p>
+                </div>
+                <div class="footer-newsletter-action">
+                    <form id="footer-newsletter-form" class="footer-newsletter-form">
+                        <div class="footer-input-group">
+                            <i class="fa-regular fa-envelope input-icon"></i>
+                            <input type="email" id="footer-newsletter-email" name="email" placeholder="Votre adresse email..." required>
+                            <button type="submit" id="footer-newsletter-btn" class="footer-newsletter-btn">
+                                <span>S'abonner</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                        <div id="footer-newsletter-message" class="footer-newsletter-msg"></div>
+                        <p class="footer-newsletter-promise">
+                            <i class="fa-solid fa-lock"></i> Pas de spam. Désabonnement à tout moment.
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="footer-container">
             <div class="footer-column footer-brand">
                 <div class="logo">
-                    <a href="/">Luxe<span>Cart</span></a>
+                    <a href="/">Lux<span style="font-size: 3rem;">Cart</span></a>
                 </div>
+
                 <p class="brand-description">
-                    LuxeCart est votre destination privilégiée pour l'import-export de produits internationaux en Côte
+                    LuxCart est votre destination privilégiée pour l'import-export de produits internationaux en Côte
                     d'Ivoire. Nous sélectionnons le meilleur de la mode et de l'électronique pour vous offrir une
                     expérience premium.
                 </p>
+                
             </div>
 
             <div class="footer-column">
@@ -217,7 +227,7 @@
                 </div>
                 <div class="contact-item">
                     <i class="fa-solid fa-envelope"></i>
-                    <span>contact@luxecart.ci</span>
+                    <span>contact@luxcart.ci</span>
                 </div>
             </div>
         </div>
@@ -232,8 +242,90 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- Modal Popup Détail Produit -->
+    <div id="product-detail-modal" class="product-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="product-modal-card">
+            <!-- Bouton de fermeture avec icône (X) -->
+            <button type="button" class="product-modal-close" id="modal-close-btn" aria-label="Fermer la fenêtre">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
 
+            <!-- Loading Spinner -->
+            <div class="product-modal-loader" id="modal-loader">
+                <div class="modal-spinner"></div>
+                <p>Chargement des détails du produit...</p>
+            </div>
+
+            <!-- Contenu du produit -->
+            <div class="product-modal-body" id="modal-body" style="display: none;">
+                <div class="modal-grid">
+                    <!-- Visuel Produit -->
+                    <div class="modal-media">
+                        <div class="modal-img-container">
+                            <img id="modal-img" src="" alt="Produit">
+                        </div>
+                        <span class="modal-cat-badge" id="modal-badge"></span>
+                    </div>
+
+                    <!-- Détails Produit -->
+                    <div class="modal-info">
+                        <div class="modal-header-top">
+                            <span class="modal-cat-name" id="modal-cat"></span>
+                            <div class="modal-rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <span>(4.9/5 · Avis clients)</span>
+                            </div>
+                        </div>
+
+                        <h2 class="modal-title" id="modal-title"></h2>
+                        <div class="modal-price" id="modal-price"></div>
+
+                        <div class="modal-desc-box">
+                            <h4>Description</h4>
+                            <p id="modal-description"></p>
+                        </div>
+
+                        <div class="modal-meta-list">
+                            <div class="modal-meta-row">
+                                <span class="meta-label">Disponibilité :</span>
+                                <span class="meta-val in-stock" id="modal-stock">
+                                    <i class="fa-solid fa-circle-check"></i> En stock
+                                </span>
+                            </div>
+                            <div class="modal-meta-row">
+                                <span class="meta-label">Livraison :</span>
+                                <span class="meta-val"><i class="fa-solid fa-truck-fast"></i> Rapide partout en Côte d'Ivoire</span>
+                            </div>
+                            <div class="modal-meta-row">
+                                <span class="meta-label">Garantie :</span>
+                                <span class="meta-val"><i class="fa-solid fa-shield-halved"></i> 100% Satisfait ou Remboursé</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-cta-row">
+                            <div class="modal-qty-selector">
+                                <button type="button" class="qty-btn" id="modal-qty-minus"><i class="fa-solid fa-minus"></i></button>
+                                <input type="number" id="modal-qty-input" value="1" min="1" max="99" readonly>
+                                <button type="button" class="qty-btn" id="modal-qty-plus"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                            <button type="button" class="btn-modal-add" id="modal-btn-add">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span>Ajouter au panier</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const addToCartBtns = document.querySelectorAll('.add-to-cart');
@@ -360,6 +452,266 @@
 
             document.querySelectorAll('.animate-fade-up').forEach((el) => {
                 observer.observe(el);
+            });
+
+            // Footer Newsletter Ajax Handler
+            const footerNewsletterForm = document.getElementById('footer-newsletter-form');
+            const footerNewsletterEmail = document.getElementById('footer-newsletter-email');
+            const footerNewsletterBtn = document.getElementById('footer-newsletter-btn');
+            const footerNewsletterMessage = document.getElementById('footer-newsletter-message');
+
+            if (footerNewsletterForm) {
+                footerNewsletterForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const email = footerNewsletterEmail.value.trim();
+                    if (!email) return;
+
+                    const originalBtnContent = footerNewsletterBtn.innerHTML;
+                    footerNewsletterBtn.disabled = true;
+                    footerNewsletterBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Envoi...</span>';
+
+                    fetch('{{ route("newsletter.store") }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email: email })
+                    })
+                    .then(response => response.json().then(data => ({ ok: response.ok, data: data })))
+                    .then(({ ok, data }) => {
+                        footerNewsletterMessage.style.display = 'block';
+                        footerNewsletterMessage.textContent = data.message;
+
+                        if (data.success || ok) {
+                            footerNewsletterMessage.className = 'footer-newsletter-msg success';
+                            footerNewsletterEmail.value = '';
+                            footerNewsletterBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Inscrit !</span>';
+                            setTimeout(() => {
+                                footerNewsletterBtn.disabled = false;
+                                footerNewsletterBtn.innerHTML = originalBtnContent;
+                            }, 3500);
+                        } else {
+                            footerNewsletterMessage.className = 'footer-newsletter-msg error';
+                            footerNewsletterBtn.disabled = false;
+                            footerNewsletterBtn.innerHTML = originalBtnContent;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur newsletter:', error);
+                        footerNewsletterMessage.style.display = 'block';
+                        footerNewsletterMessage.className = 'footer-newsletter-msg error';
+                        footerNewsletterMessage.textContent = 'Une erreur est survenue. Veuillez réessayer.';
+                        footerNewsletterBtn.disabled = false;
+                        footerNewsletterBtn.innerHTML = originalBtnContent;
+                    });
+                });
+            }
+
+            // ===== PRODUCT DETAIL MODAL POPUP LOGIC =====
+            const productModal = document.getElementById('product-detail-modal');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const modalLoader = document.getElementById('modal-loader');
+            const modalBody = document.getElementById('modal-body');
+            const modalImg = document.getElementById('modal-img');
+            const modalBadge = document.getElementById('modal-badge');
+            const modalCat = document.getElementById('modal-cat');
+            const modalTitle = document.getElementById('modal-title');
+            const modalPrice = document.getElementById('modal-price');
+            const modalDesc = document.getElementById('modal-description');
+            const modalStock = document.getElementById('modal-stock');
+            const modalQtyInput = document.getElementById('modal-qty-input');
+            const modalQtyMinus = document.getElementById('modal-qty-minus');
+            const modalQtyPlus = document.getElementById('modal-qty-plus');
+            const modalBtnAdd = document.getElementById('modal-btn-add');
+
+            let currentModalProductId = null;
+
+            function openProductModal(productId) {
+                if (!productModal) return;
+                currentModalProductId = productId;
+                if (modalQtyInput) modalQtyInput.value = 1;
+
+                productModal.style.display = 'flex';
+                requestAnimationFrame(() => {
+                    productModal.classList.add('active');
+                });
+                productModal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+
+                if (modalLoader) modalLoader.style.display = 'flex';
+                if (modalBody) modalBody.style.display = 'none';
+
+                fetch(`/produit/${productId}?format=json`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.produit) {
+                        const p = data.produit;
+                        if (modalImg) {
+                            modalImg.src = p.image;
+                            modalImg.alt = p.nom;
+                        }
+                        if (modalBadge) modalBadge.textContent = p.categorie;
+                        if (modalCat) modalCat.textContent = p.categorie;
+                        if (modalTitle) modalTitle.textContent = p.nom;
+                        if (modalPrice) modalPrice.textContent = p.prix_formate;
+                        if (modalDesc) modalDesc.textContent = p.description || 'Produit authentique de qualité supérieure disponible chez LuxeCart.';
+                        
+                        if (modalStock) {
+                            if (p.stock > 0) {
+                                modalStock.className = 'meta-val in-stock';
+                                modalStock.innerHTML = `<i class="fa-solid fa-circle-check"></i> En stock (${p.stock} unités)`;
+                                if (modalBtnAdd) modalBtnAdd.disabled = false;
+                            } else {
+                                modalStock.className = 'meta-val out-of-stock';
+                                modalStock.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Rupture temporaire`;
+                                if (modalBtnAdd) modalBtnAdd.disabled = true;
+                            }
+                        }
+
+                        if (modalBtnAdd) {
+                            modalBtnAdd.setAttribute('data-id', p.id);
+                            modalBtnAdd.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> <span>Ajouter au panier</span>';
+                            modalBtnAdd.style.background = '';
+                        }
+
+                        if (modalLoader) modalLoader.style.display = 'none';
+                        if (modalBody) modalBody.style.display = 'block';
+                    }
+                })
+                .catch(err => {
+                    console.error('Erreur chargement produit:', err);
+                    if (modalLoader) {
+                        modalLoader.innerHTML = '<p style="color:#ef4444;"><i class="fa-solid fa-circle-exclamation"></i> Impossible de charger les détails du produit.</p>';
+                    }
+                });
+            }
+            window.openProductModal = openProductModal;
+
+            function closeProductModal() {
+                if (!productModal) return;
+                productModal.classList.remove('active');
+                productModal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+                setTimeout(() => {
+                    productModal.style.display = 'none';
+                }, 300);
+            }
+
+            if (modalCloseBtn) {
+                modalCloseBtn.addEventListener('click', closeProductModal);
+            }
+
+            if (productModal) {
+                productModal.addEventListener('click', function(e) {
+                    if (e.target === productModal) {
+                        closeProductModal();
+                    }
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && productModal && productModal.classList.contains('active')) {
+                    closeProductModal();
+                }
+            });
+
+            // Quantity buttons in modal
+            if (modalQtyMinus && modalQtyPlus && modalQtyInput) {
+                modalQtyMinus.addEventListener('click', function() {
+                    let val = parseInt(modalQtyInput.value) || 1;
+                    if (val > 1) modalQtyInput.value = val - 1;
+                });
+                modalQtyPlus.addEventListener('click', function() {
+                    let val = parseInt(modalQtyInput.value) || 1;
+                    if (val < 99) modalQtyInput.value = val + 1;
+                });
+            }
+
+            // Modal Add to Cart
+            if (modalBtnAdd) {
+                modalBtnAdd.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (!currentModalProductId) return;
+
+                    const qty = parseInt(modalQtyInput.value) || 1;
+                    modalBtnAdd.disabled = true;
+                    modalBtnAdd.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Ajout...</span>';
+
+                    fetch(`/cart/add/${currentModalProductId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ quantite: qty })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (cartCountBadge) cartCountBadge.textContent = data.cartCount;
+                            modalBtnAdd.innerHTML = '<i class="fa-solid fa-check"></i> <span>Ajouté au panier !</span>';
+                            modalBtnAdd.style.background = '#10b981';
+                            setTimeout(() => {
+                                modalBtnAdd.disabled = false;
+                                modalBtnAdd.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> <span>Ajouter au panier</span>';
+                                modalBtnAdd.style.background = '';
+                            }, 2000);
+                        } else {
+                            modalBtnAdd.disabled = false;
+                            modalBtnAdd.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> <span>Ajouter au panier</span>';
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Erreur ajout panier modal:', err);
+                        modalBtnAdd.disabled = false;
+                        modalBtnAdd.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> <span>Ajouter au panier</span>';
+                    });
+                });
+            }
+
+            // Intercept clicks on product cards & detail links
+            document.addEventListener('click', function(e) {
+                // Ignore if clicked on an add-to-cart button or modal internal controls
+                if (e.target.closest('.add-to-cart') || e.target.closest('#modal-btn-add') || e.target.closest('.modal-qty-selector') || e.target.closest('.product-modal-card')) {
+                    return;
+                }
+
+                const productLink = e.target.closest('a[href*="/produit/"]');
+                const productCard = e.target.closest('.product-card, .deal-card');
+
+                let targetId = null;
+
+                if (productLink && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+                    const match = productLink.getAttribute('href').match(/\/produit\/(\d+)/);
+                    if (match) {
+                        e.preventDefault();
+                        targetId = match[1];
+                    }
+                } else if (productCard) {
+                    const link = productCard.querySelector('a[href*="/produit/"]');
+                    if (link) {
+                        const match = link.getAttribute('href').match(/\/produit\/(\d+)/);
+                        if (match) {
+                            e.preventDefault();
+                            targetId = match[1];
+                        }
+                    } else if (productCard.id && productCard.id.startsWith('product-')) {
+                        targetId = productCard.id.replace('product-', '');
+                    }
+                }
+
+                if (targetId) {
+                    openProductModal(targetId);
+                }
             });
         });
     </script>
