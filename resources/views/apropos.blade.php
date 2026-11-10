@@ -58,7 +58,7 @@
             <div class="about-split-right">
                 <div class="about-media-wrap">
                     <div class="about-media-main">
-                        <img src="{{ asset('images/imgH2.jpg') }}" alt="LuxeCart - Accessoires Mode Premium">
+                        <img src="{{ asset('images/vet81.jpg') }}" alt="LuxeCart - Accessoires Mode Premium">
                     </div>
                     <div class="about-media-accent"></div>
                 </div>

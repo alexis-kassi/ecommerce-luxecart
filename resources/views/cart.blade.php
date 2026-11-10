@@ -756,6 +756,146 @@
             transform: translateY(-2px);
             box-shadow: 0 12px 22px -6px rgba(239, 68, 68, 0.55);
         }
+
+        /* ════════════════════════════════
+           SECTION CODE PROMO
+        ════════════════════════════════ */
+        .promo-section {
+            margin-bottom: 0.5rem;
+        }
+        .promo-label-txt {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.03em;
+        }
+        .promo-input-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .promo-input {
+            flex: 1;
+            padding: 0.6rem 0.9rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-family: inherit;
+            color: #1e293b;
+            background: #f8fafc;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .promo-input:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+            background: #fff;
+        }
+        .promo-input.error {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+        }
+        .promo-input.success {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22,163,74,0.1);
+        }
+        .promo-apply-btn {
+            padding: 0.6rem 1.1rem;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s;
+            white-space: nowrap;
+        }
+        .promo-apply-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        .promo-apply-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .promo-feedback {
+            margin-top: 0.45rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border-radius: 8px;
+            padding: 0.4rem 0.75rem;
+        }
+        .promo-feedback.is-error {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        .promo-feedback.is-success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+        .promo-applied-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 1.5px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 0.65rem 0.9rem;
+            flex-wrap: wrap;
+        }
+        .promo-applied-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #16a34a;
+            color: #fff;
+            border-radius: 20px;
+            padding: 0.2rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+        }
+        .promo-applied-label {
+            flex: 1;
+            font-size: 0.82rem;
+            color: #166534;
+            font-weight: 500;
+        }
+        .promo-remove-btn {
+            background: none;
+            border: 1.5px solid #86efac;
+            color: #16a34a;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .promo-remove-btn:hover {
+            background: #dc2626;
+            border-color: #dc2626;
+            color: #fff;
+        }
+        .promo-discount-line {
+            margin-top: 0.5rem;
+        }
+        @keyframes promo-pop {
+            0%   { transform: scale(0.9); opacity: 0; }
+            60%  { transform: scale(1.03); }
+            100% { transform: scale(1);  opacity: 1; }
+        }
+        .promo-pop-anim { animation: promo-pop 0.35s ease forwards; }
     </style>
 @endpush
 
@@ -887,6 +1027,8 @@
 
                     <!-- Récapitulatif de Commande -->
                     <div class="cart-summary-card">
+                        <!-- Élément caché pour le total brut (utilisé par le JS promo) -->
+                        <span id="cartRawTotal" data-total="{{ $total }}" style="display:none;"></span>
                         <div class="summary-card-header">
                             <h3>Récapitulatif</h3>
                             <p>Calcul automatique de votre commande</p>
@@ -911,10 +1053,71 @@
 
                         <div class="summary-divider"></div>
 
+                        <!-- ═══ SECTION CODE PROMO ═══ -->
+                        <div class="promo-section" id="promoSection">
+                            @if($promoCode)
+                                <!-- Code déjà appliqué -->
+                                <div class="promo-applied-wrap" id="promoApplied">
+                                    <div class="promo-applied-badge">
+                                        <i class="fa-solid fa-tag"></i>
+                                        <span class="promo-applied-code">{{ $promoCode }}</span>
+                                    </div>
+                                    <span class="promo-applied-label">{{ $promoLabel }}</span>
+                                    <button type="button" class="promo-remove-btn" id="promoRemoveBtn" title="Retirer ce code">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                            @else
+                                <!-- Formulaire de saisie -->
+                                <div class="promo-form-wrap" id="promoFormWrap">
+                                    <label class="promo-label-txt">
+                                        <i class="fa-solid fa-ticket"></i> Code promo
+                                    </label>
+                                    <div class="promo-input-row">
+                                        <input type="text"
+                                               id="promoCodeInput"
+                                               class="promo-input"
+                                               placeholder="Ex : LUXE10"
+                                               maxlength="20"
+                                               autocomplete="off">
+                                        <button type="button" id="promoApplyBtn" class="promo-apply-btn">
+                                            Appliquer
+                                        </button>
+                                    </div>
+                                    <div id="promoFeedback" class="promo-feedback" style="display:none;"></div>
+                                </div>
+                                <!-- Après application AJAX, on affiche ici la version "appliqué" -->
+                                <div class="promo-applied-wrap" id="promoApplied" style="display:none;">
+                                    <div class="promo-applied-badge">
+                                        <i class="fa-solid fa-tag"></i>
+                                        <span class="promo-applied-code" id="promoAppliedCode"></span>
+                                    </div>
+                                    <span class="promo-applied-label" id="promoAppliedLabel"></span>
+                                    <button type="button" class="promo-remove-btn" id="promoRemoveBtn" title="Retirer ce code">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                        <!-- ═══ FIN CODE PROMO ═══ -->
+
+                        <!-- Ligne réduction (visible si promo active) -->
+                        <div class="summary-line-item promo-discount-line" id="promoDiscountLine"
+                             style="{{ $promoCode ? '' : 'display:none;' }}">
+                            <span class="summary-label" style="color:#16a34a;">
+                                <i class="fa-solid fa-circle-minus"></i> Réduction code promo
+                            </span>
+                            <span class="summary-value" style="color:#16a34a;" id="promoDiscountAmount">
+                                -{{ number_format($promoDiscount, 0, ',', ' ') }} FCFA
+                            </span>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
                         <div class="summary-total-line">
                             <span class="summary-total-label">Total à payer</span>
-                            <span class="summary-total-price">
-                                {{ number_format($total, 0, ',', ' ') }} <small>FCFA</small>
+                            <span class="summary-total-price" id="cartGrandTotal">
+                                {{ number_format($totalFinal, 0, ',', ' ') }} <small>FCFA</small>
                             </span>
                         </div>
 
@@ -1053,6 +1256,134 @@
                 if (!pendingForm) return;
                 pendingForm.submit();
             });
+        })();
+
+        // ═══════════════════════════════════════════
+        // GESTION DU CODE PROMO (AJAX)
+        // ═══════════════════════════════════════════
+        (function () {
+            const applyBtn      = document.getElementById('promoApplyBtn');
+            const removeBtn     = document.getElementById('promoRemoveBtn');
+            const input         = document.getElementById('promoCodeInput');
+            const feedback      = document.getElementById('promoFeedback');
+            const formWrap      = document.getElementById('promoFormWrap');
+            const appliedWrap   = document.getElementById('promoApplied');
+            const appliedCode   = document.getElementById('promoAppliedCode');
+            const appliedLabel  = document.getElementById('promoAppliedLabel');
+            const discountLine  = document.getElementById('promoDiscountLine');
+            const discountAmt   = document.getElementById('promoDiscountAmount');
+            const grandTotal    = document.getElementById('cartGrandTotal');
+
+            // Récupère le total brut depuis le DOM (attribut data-total)
+            const rawTotal = parseFloat(document.getElementById('cartRawTotal').dataset.total) || 0;
+
+            function formatFCFA(amount) {
+                return new Intl.NumberFormat('fr-FR').format(Math.round(amount)) + ' FCFA';
+            }
+
+            function showFeedback(msg, type) {
+                if (!feedback) return;
+                feedback.textContent = msg;
+                feedback.className = 'promo-feedback ' + (type === 'error' ? 'is-error' : 'is-success');
+                feedback.style.display = 'block';
+            }
+
+            function hideFeedback() {
+                if (feedback) { feedback.style.display = 'none'; feedback.textContent = ''; }
+            }
+
+            if (applyBtn) {
+                applyBtn.addEventListener('click', function () {
+                    const code = input ? input.value.trim() : '';
+                    if (!code) { showFeedback('Veuillez saisir un code promo.', 'error'); return; }
+
+                    applyBtn.disabled = true;
+                    applyBtn.textContent = '…';
+                    if (input) input.classList.remove('error', 'success');
+
+                    fetch('{{ route("cart.promo.apply") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify({ code: code, total: rawTotal }),
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        applyBtn.disabled = false;
+                        applyBtn.textContent = 'Appliquer';
+
+                        if (data.success) {
+                            if (input) input.classList.add('success');
+                            hideFeedback();
+
+                            // Basculer vers le badge "appliqué"
+                            if (formWrap) formWrap.style.display = 'none';
+                            if (appliedWrap) {
+                                if (appliedCode) appliedCode.textContent = data.code;
+                                if (appliedLabel) appliedLabel.textContent = data.label;
+                                appliedWrap.style.display = 'flex';
+                                appliedWrap.classList.add('promo-pop-anim');
+                            }
+
+                            // Afficher la ligne réduction
+                            if (discountLine) discountLine.style.display = 'flex';
+                            if (discountAmt) discountAmt.textContent = '-' + formatFCFA(data.discount_amount);
+
+                            // Mettre à jour le total
+                            if (grandTotal) {
+                                grandTotal.innerHTML = formatFCFA(data.new_total).replace(' FCFA', '') + ' <small>FCFA</small>';
+                            }
+                        } else {
+                            if (input) input.classList.add('error');
+                            showFeedback(data.message || 'Code invalide.', 'error');
+                        }
+                    })
+                    .catch(() => {
+                        applyBtn.disabled = false;
+                        applyBtn.textContent = 'Appliquer';
+                        showFeedback('Erreur réseau. Veuillez réessayer.', 'error');
+                    });
+                });
+
+                // Appliquer avec la touche Entrée
+                if (input) {
+                    input.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter') applyBtn.click();
+                    });
+                }
+            }
+
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function () {
+                    fetch('{{ route("cart.promo.remove") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify({ total: rawTotal }),
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Réinitialiser l'affichage
+                            if (appliedWrap) appliedWrap.style.display = 'none';
+                            if (formWrap) { formWrap.style.display = 'block'; }
+                            if (input) { input.value = ''; input.classList.remove('error', 'success'); }
+                            hideFeedback();
+
+                            if (discountLine) discountLine.style.display = 'none';
+                            if (grandTotal) {
+                                grandTotal.innerHTML = formatFCFA(data.new_total).replace(' FCFA', '') + ' <small>FCFA</small>';
+                            }
+                        }
+                    });
+                });
+            }
         })();
     </script>
 @endsection

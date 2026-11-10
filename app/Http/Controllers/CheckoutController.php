@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -9,11 +9,12 @@ use App\Models\Produit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+
 class CheckoutController extends Controller
 {
     public function index()
     {
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect()->route('login')->with('info', 'Veuillez vous connecter ou vous inscrire pour passer commande.');
         }
 
@@ -43,7 +44,7 @@ class CheckoutController extends Controller
 
     public function process(Request $request)
     {
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Vous devez être connecté pour confirmer votre commande.');
         }
 
@@ -69,7 +70,7 @@ class CheckoutController extends Controller
             $total = 0;
 
             $order = Order::create([
-                'user_id'          => auth()->id(),
+                'user_id'          => Auth::id(),
                 'nom'              => $request->nom,
                 'email'            => $request->email,
                 'telephone'        => $request->telephone,
@@ -81,15 +82,28 @@ class CheckoutController extends Controller
             ]);
 
             foreach ($cartRows as $row) {
-                if (!$row->produit) continue;
-                $subtotal = $row->produit->prix * $row->quantite;
+                // Verrouille la ligne en base de données pour éviter la survente concurrente
+                $produit = Produit::where('id', $row->produit_id)->lockForUpdate()->first();
+
+                if (!$produit) {
+                    throw new \Exception("Un article de votre panier n'existe plus en boutique.");
+                }
+
+                if ($produit->stock < $row->quantite) {
+                    throw new \Exception("Stock insuffisant pour « {$produit->nom} ». Quantité disponible : {$produit->stock}.");
+                }
+
+                // Décrémenter le stock du produit en base
+                $produit->decrement('stock', $row->quantite);
+
+                $subtotal = $produit->prix * $row->quantite;
                 $total   += $subtotal;
 
                 OrderItem::create([
                     'order_id'      => $order->id,
-                    'produit_id'    => $row->produit->id,
+                    'produit_id'    => $produit->id,
                     'quantite'      => $row->quantite,
-                    'prix_unitaire' => $row->produit->prix,
+                    'prix_unitaire' => $produit->prix,
                 ]);
             }
 
@@ -108,9 +122,14 @@ class CheckoutController extends Controller
         }
     }
 
-    public function success($id)
-    {
-        $order = Order::findOrFail($id);
-        return view('success', compact('order'));
-    }
+   public function success(int $id)
+{
+    // Sécurité IDOR : l'utilisateur ne peut voir que sa propre commande
+    $order = Order::where('id', $id)
+        ->where('user_id', Auth::id())
+        ->with('items.produit')
+        ->firstOrFail();
+
+    return view('checkout.success', compact('order'));
+}
 }

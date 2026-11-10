@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Produit;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
+use App\Models\Avis;
 class ProduitController extends Controller
 {
     /**
@@ -34,6 +35,50 @@ class ProduitController extends Controller
                 'stock' => 8,
                 'categorie' => 'Électronique',
                 'image' => 'images/mixer.jpg'
+            ]);
+        }
+
+        if (!Produit::where('image', 'like', '%ceinture%')->exists()) {
+            Produit::create([
+                'nom' => 'Ceinture en Cuir Véritable',
+                'description' => 'Ceinture élégante en cuir véritable avec boucle en métal brossé, finitions soignées pour costume ou tenue casual.',
+                'prix' => 18000,
+                'stock' => 10,
+                'categorie' => 'Accessoires Mode',
+                'image' => 'images/ceinture.jpg'
+            ]);
+        }
+
+        if (!Produit::where('image', 'like', '%mocassins%')->exists()) {
+            Produit::create([
+                'nom' => 'Mocassins en Cuir Élégance',
+                'description' => 'Mocassins raffinés en cuir véritable avec semelle cousue main, alliant élégance italienne et confort absolu.',
+                'prix' => 35000,
+                'stock' => 8,
+                'categorie' => 'Chaussure',
+                'image' => 'images/mocassins.jpg'
+            ]);
+        }
+
+        if (!Produit::where('image', 'like', '%sneakers%')->exists()) {
+            Produit::create([
+                'nom' => 'Sneakers Blanches Minimalistes',
+                'description' => 'Baskets basses épurées en cuir doux avec semelle renforcée, idéales pour un look urbain et contemporain.',
+                'prix' => 25000,
+                'stock' => 14,
+                'categorie' => 'Chaussure',
+                'image' => 'images/sneakers.jpg'
+            ]);
+        }
+
+        if (!Produit::where('image', 'like', '%chelsea%')->exists()) {
+            Produit::create([
+                'nom' => 'Bottines Chelsea en Cuir',
+                'description' => 'Bottines élégantes en cuir noir avec élastiques latéraux et semelle crantée, alliance parfaite de style et robustesse.',
+                'prix' => 42000,
+                'stock' => 6,
+                'categorie' => 'Chaussure',
+                'image' => 'images/chelsea_boots.jpg'
             ]);
         }
 
@@ -82,6 +127,7 @@ class ProduitController extends Controller
             'max_price' => 'nullable|numeric|min:0',
             'sort'      => 'nullable|string|in:latest,price_asc,price_desc,name_asc,name_desc,popular',
             'in_stock'  => 'nullable|in:0,1,true,false',
+            'per_page'  => 'nullable|integer|in:6,9,12,18,24,36',
         ]);
 
         $query = Produit::query();
@@ -129,17 +175,30 @@ class ProduitController extends Controller
             $query->latest();
         }
 
-        $produits = $query->get();
+        $perPage = (int) ($validated['per_page'] ?? 12);
+        $produits = $query->paginate($perPage)->withQueryString();
 
         // Statistiques globales pour la boutique
         $totalProductsCount = Produit::count();
-        $categories = Produit::select('categorie', \DB::raw('count(*) as count'))
+        $categories = Produit::select('categorie', DB::raw('count(*) as count'))
             ->groupBy('categorie')
             ->orderBy('categorie', 'asc')
             ->get();
 
         $minPriceDb = (int) (Produit::min('prix') ?? 0);
         $maxPriceDb = (int) (Produit::max('prix') ?? 100000);
+
+        // Réponse AJAX pour la recherche en direct et le filtrage dynamique
+        if ($request->ajax() || $request->wantsJson() || $request->header('X-Live-Search')) {
+            return response()->json([
+                'success'   => true,
+                'total'     => $produits->total(),
+                'firstItem' => $produits->firstItem() ?? 0,
+                'lastItem'  => $produits->lastItem() ?? 0,
+                'count'     => count($produits),
+                'html'      => view('produits.partials.products_grid', compact('produits'))->render(),
+            ]);
+        }
 
         return view('produits.index', compact(
             'produits',
@@ -150,7 +209,7 @@ class ProduitController extends Controller
         ));
     }
 
-    public function show($id, Request $request)
+    public function show( int $id, Request $request)
     {
         $produit = Produit::findOrFail($id);
 
@@ -166,12 +225,35 @@ class ProduitController extends Controller
                     'stock' => $produit->stock,
                     'categorie' => $produit->categorie,
                     'image' => asset($produit->image ?? 'images/placeholder-product.jpg'),
-                    'url' => route('products.show', $produit->id)
+                    'url' => route('products.show', $produit->id),
+                    'is_favorite' => isset(session('wishlist', [])[$produit->id])
                 ]
             ]);
         }
 
-        return view('produits.show', compact('produit'));
+        // Avis validés + statistiques
+        $avis = Avis::where('produit_id', $id)
+            ->where('valide', true)
+            ->latest()
+            ->get();
+
+        $avgNote     = $avis->count() ? round($avis->avg('note'), 1) : null;
+        $totalAvis   = $avis->count();
+
+        // Répartition par étoile (5→1)
+        $repartition = [];
+        for ($i = 5; $i >= 1; $i--) {
+            $repartition[$i] = $avis->where('note', $i)->count();
+        }
+
+        // L'utilisateur a-t-il déjà laissé un avis ?
+        $dejaAvis = Avis::where('produit_id', $id)
+            ->where('session_id', session()->getId())
+            ->exists();
+
+        return view('produits.show', compact(
+            'produit', 'avis', 'avgNote', 'totalAvis', 'repartition', 'dejaAvis'
+        ));
     }
 
     /**
@@ -210,7 +292,7 @@ class ProduitController extends Controller
         $produits = $query->get();
 
         // Récupération des catégories pour les onglets
-        $categories = Produit::select('categorie', \DB::raw('count(*) as count'))
+        $categories = Produit::select('categorie', DB::raw('count(*) as count'))
             ->whereNotNull('categorie')
             ->where('categorie', '!=', '')
             ->groupBy('categorie')

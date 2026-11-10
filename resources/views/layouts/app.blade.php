@@ -23,6 +23,79 @@
     <!-- Custom Style -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        .wishlist-btn {
+            position: relative;
+            font-size: 1.25rem;
+            color: var(--dark);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            text-decoration: none;
+            padding: 0.2rem;
+        }
+        .wishlist-btn:hover {
+            color: #e11d48;
+        }
+        .wishlist-count {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background: #e11d48;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        .btn-wishlist-toggle {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(241, 245, 249, 0.8);
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            z-index: 10;
+        }
+        .btn-wishlist-toggle:hover {
+            color: #e11d48;
+            transform: scale(1.12);
+            background: #ffffff;
+        }
+        .btn-wishlist-toggle.active {
+            color: #e11d48;
+            background: #fff1f2;
+            border-color: #fecdd3;
+        }
+        .heart-pop {
+            animation: heartPopAnim 0.35s ease;
+        }
+        @keyframes heartPopAnim {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+    </style>
     @stack('styles')
 
     <!-- Meta tags for SEO -->
@@ -41,7 +114,7 @@
 
             {{-- Logo du site --}}
             <div class="logo">
-                <a href="/">Lux<span style="font-size: 3.2rem;">Cart</span></a>
+                <a href="/"><i class="fa-solid fa-cart-shopping" style="font-size: 30px"></i>Lux<span style="font-size: 2.2rem;">Cart</span></a>
             </div>
 
             {{-- Menu de navigation --}}
@@ -50,34 +123,46 @@
                     <i class="fa-solid fa-xmark"></i>
                 </button>
                 <ul>
-                    {{-- -Menus de navigation du site --}}
                     <li class="menu_accueil">
                         <a href="{{ route('home') }}" id="nav-home"
-                            class="{{ Request::is('/') ? 'active' : '' }}">Accueil</a>
+                           class="{{ Request::is('/') ? 'active' : '' }}">Accueil</a>
                     </li>
+
                     <li>
                         <a href="{{ route('products.index') }}" id="nav-products"
-                            class="{{ Request::is('produits*') ? 'active' : '' }}">Boutique</a>
+                           class="{{ Request::is('produits') ? 'active' : '' }}">Boutique</a>
                     </li>
+
                     <li>
                         <a href="/#categories" id="nav-categories">Catégories</a>
                     </li>
-                    <li>
-                        <a href="{{ route('about') }}" id="nav-about"
-                            class="{{ Request::is('apropos') ? 'active' : '' }}">À Propos de</a>
-                    </li>
+
                     <li>
                         <a href="{{ route('nouveautes') }}" id="nav-nouveautes"
                             class="{{ Request::is('nouveautes') ? 'active' : '' }}">Nouveautés</a>
                     </li>
 
-                    {{-- Liens d'authentification pour mobile --}}
+                    <li>
+                        <a href="{{ route('about') }}" id="nav-about"
+                           class="{{ Request::is('apropos') ? 'active' : '' }}">À Propos</a>
+                    </li>
+
+                    {{-- Favoris uniquement dans le menu mobile --}}
+                    <li class="mobile-nav-item">
+                        <a href="{{ route('wishlist.index') }}" id="nav-wishlist-mobile"
+                            class="{{ Request::is('favoris') ? 'active' : '' }}">
+                            <i class="fa-regular fa-heart" style="margin-right: 6px;"></i> Favoris (<span class="mobile-wishlist-count">{{ count(session('wishlist', [])) }}</span>)
+                        </a>
+                    </li>
+
+                    {{-- LIENS D'AUTHENTIFICATION MOBILE --}}
                     <li class="mobile-auth-item">
                         @auth
                             <div class="mobile-user-info"
                                 style="color: white; font-size: 1.2rem; margin-bottom: 1rem; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;">
                                 <i class="fa-regular fa-user"></i> {{ Auth::user()->name }}
                             </div>
+
                             <form action="{{ route('logout') }}" method="POST" style="width: 100%;">
                                 @csrf
                                 <button type="submit"
@@ -85,6 +170,7 @@
                                     <i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion
                                 </button>
                             </form>
+
                         @else
                             <a href="{{ route('login') }}"
                                 style="display: block; width: 100%; background: var(--primary); color: white; padding: 1rem 0; border-radius: 8px; font-size: 1.2rem; margin-top: 1rem; text-align: center; font-weight: 500;">
@@ -100,14 +186,21 @@
                 <button class="search-mobile-toggle" id="search-toggle">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
+
                 <!-- Barre de recherche pproduit -->
                 <form action="{{ route('products.index') }}" method="GET" class="global-search-form" id="search-form">
                     <input type="text" name="search" placeholder="Rechercher un produit..."
                         value="{{ request('search') }}" class="global-search-input">
+
                     <button type="submit" class="global-search-btn">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                 </form>
+
+                <a href="{{ route('wishlist.index') }}" id="nav-wishlist" class="wishlist-btn" title="Mes Favoris">
+                    <i class="fa-regular fa-heart"></i>
+                    <span class="wishlist-count" id="wishlist-count-badge">{{ count(session('wishlist', [])) }}</span>
+                </a>
 
                 <a href="{{ route('cart.index') }}" id="nav-cart" class="cart-btn">
                     <i class="fa-solid fa-cart-shopping"></i>
@@ -123,6 +216,7 @@
                                 <i class="fa-regular fa-user"></i> {{ Auth::user()->name }}
                                 <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i>
                             </button>
+                            
                             <div class="dropdown-content"
                                 style="display: none; position: absolute; right: 0; top: 100%; background: white; min-width: 180px; box-shadow: var(--shadow); border-radius: 12px; padding: 0.5rem; z-index: 1000; border: 1px solid var(--glass-border);">
                                 <form action="{{ route('logout') }}" method="POST">
@@ -146,6 +240,97 @@
     <main>
         @yield('content')
     </main>
+
+
+    
+    <!-- Modal Popup Détail Produit -->
+    <div id="product-detail-modal" class="product-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="product-modal-card">
+            <!-- Bouton de fermeture avec icône (X) -->
+            <button type="button" class="product-modal-close" id="modal-close-btn" aria-label="Fermer la fenêtre">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Loading Spinner -->
+            <div class="product-modal-loader" id="modal-loader">
+                <div class="modal-spinner"></div>
+                <p>Chargement des détails du produit...</p>
+            </div>
+
+            <!-- Contenu du produit -->
+            <div class="product-modal-body" id="modal-body" style="display: none;">
+                <div class="modal-grid">
+                    <!-- Visuel Produit -->
+                    <div class="modal-media">
+                        <div class="modal-img-container">
+                            <img id="modal-img" src="" alt="Produit">
+                        </div>
+                        <span class="modal-cat-badge" id="modal-badge"></span>
+                    </div>
+
+                    <!-- Détails Produit -->
+                    <div class="modal-info">
+                        <div class="modal-header-top">
+                            <span class="modal-cat-name" id="modal-cat"></span>
+                            <div class="modal-rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <span>(4.9/5 · Avis clients)</span>
+                            </div>
+                        </div>
+
+                        <h2 class="modal-title" id="modal-title"></h2>
+                        <div class="modal-price" id="modal-price"></div>
+
+                        <div class="modal-desc-box">
+                            <h4>Description</h4>
+                            <p id="modal-description"></p>
+                        </div>
+
+                        <div class="modal-meta-list">
+                            <div class="modal-meta-row">
+                                <span class="meta-label">Disponibilité :</span>
+                                <span class="meta-val in-stock" id="modal-stock">
+                                    <i class="fa-solid fa-circle-check"></i> En stock
+                                </span>
+                            </div>
+                            <div class="modal-meta-row">
+                                <span class="meta-label">Livraison :</span>
+                                <span class="meta-val"><i class="fa-solid fa-truck-fast"></i> Rapide partout en Côte d'Ivoire</span>
+                            </div>
+                            <div class="modal-meta-row">
+                                <span class="meta-label">Garantie :</span>
+                                <span class="meta-val"><i class="fa-solid fa-shield-halved"></i> 100% Satisfait ou Remboursé</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-cta-row">
+                            <div class="modal-qty-selector">
+                                <button type="button" class="qty-btn" id="modal-qty-minus"><i class="fa-solid fa-minus"></i></button>
+                                <input type="number" id="modal-qty-input" value="1" min="1" max="99" readonly>
+                                <button type="button" class="qty-btn" id="modal-qty-plus"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                            <button type="button" class="btn-modal-add" id="modal-btn-add">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span>Ajouter au panier</span>
+                            </button>
+                            <button type="button" class="btn-wishlist-toggle" id="modal-btn-wishlist" onclick="toggleWishlist(currentModalProductId, this)" title="Ajouter aux favoris" style="position: static; width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;">
+                                <i class="fa-regular fa-heart"></i>
+                            </button>
+                            <a href="#" class="btn-modal-detail" id="modal-btn-detail" title="Voir la fiche complète">
+                                <i class="fa-solid fa-arrow-right"></i>
+                                <span>Détails</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 
     {{-- PARTIE FOOTER --}}
     <footer class="main-footer">
@@ -242,127 +427,49 @@
         </div>
     </footer>
 
-    <!-- Modal Popup Détail Produit -->
-    <div id="product-detail-modal" class="product-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true">
-        <div class="product-modal-card">
-            <!-- Bouton de fermeture avec icône (X) -->
-            <button type="button" class="product-modal-close" id="modal-close-btn" aria-label="Fermer la fenêtre">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <!-- Loading Spinner -->
-            <div class="product-modal-loader" id="modal-loader">
-                <div class="modal-spinner"></div>
-                <p>Chargement des détails du produit...</p>
-            </div>
-
-            <!-- Contenu du produit -->
-            <div class="product-modal-body" id="modal-body" style="display: none;">
-                <div class="modal-grid">
-                    <!-- Visuel Produit -->
-                    <div class="modal-media">
-                        <div class="modal-img-container">
-                            <img id="modal-img" src="" alt="Produit">
-                        </div>
-                        <span class="modal-cat-badge" id="modal-badge"></span>
-                    </div>
-
-                    <!-- Détails Produit -->
-                    <div class="modal-info">
-                        <div class="modal-header-top">
-                            <span class="modal-cat-name" id="modal-cat"></span>
-                            <div class="modal-rating">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <span>(4.9/5 · Avis clients)</span>
-                            </div>
-                        </div>
-
-                        <h2 class="modal-title" id="modal-title"></h2>
-                        <div class="modal-price" id="modal-price"></div>
-
-                        <div class="modal-desc-box">
-                            <h4>Description</h4>
-                            <p id="modal-description"></p>
-                        </div>
-
-                        <div class="modal-meta-list">
-                            <div class="modal-meta-row">
-                                <span class="meta-label">Disponibilité :</span>
-                                <span class="meta-val in-stock" id="modal-stock">
-                                    <i class="fa-solid fa-circle-check"></i> En stock
-                                </span>
-                            </div>
-                            <div class="modal-meta-row">
-                                <span class="meta-label">Livraison :</span>
-                                <span class="meta-val"><i class="fa-solid fa-truck-fast"></i> Rapide partout en Côte d'Ivoire</span>
-                            </div>
-                            <div class="modal-meta-row">
-                                <span class="meta-label">Garantie :</span>
-                                <span class="meta-val"><i class="fa-solid fa-shield-halved"></i> 100% Satisfait ou Remboursé</span>
-                            </div>
-                        </div>
-
-                        <div class="modal-cta-row">
-                            <div class="modal-qty-selector">
-                                <button type="button" class="qty-btn" id="modal-qty-minus"><i class="fa-solid fa-minus"></i></button>
-                                <input type="number" id="modal-qty-input" value="1" min="1" max="99" readonly>
-                                <button type="button" class="qty-btn" id="modal-qty-plus"><i class="fa-solid fa-plus"></i></button>
-                            </div>
-                            <button type="button" class="btn-modal-add" id="modal-btn-add">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                                <span>Ajouter au panier</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const addToCartBtns = document.querySelectorAll('.add-to-cart');
             const cartCountBadge = document.querySelector('.cart-count');
 
-            addToCartBtns.forEach(btn => {
-                btn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const productId = this.getAttribute('data-id');
+            // Délégation d'événements pour gérer tous les boutons d'ajout au panier (y compris chargés dynamiquement)
+            document.addEventListener('click', function (e) {
+                const btn = e.target.closest('.add-to-cart');
+                if (!btn) return;
 
-                    fetch(`/cart/add/${productId}`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
+                e.preventDefault();
+                e.stopPropagation();
+                const productId = btn.getAttribute('data-id');
+                if (!productId) return;
+
+                fetch(`/cart/add/${productId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Mettre à jour le compteur du panier
+                            if (cartCountBadge) cartCountBadge.textContent = data.cartCount;
+
+                            // Feedback visuel sur le bouton
+                            const originalIcon = btn.innerHTML;
+                            btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                            btn.style.background = '#10b981';
+
+                            setTimeout(() => {
+                                btn.innerHTML = originalIcon;
+                                btn.style.background = '';
+                            }, 2000);
                         }
                     })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // Update badge
-                                cartCountBadge.textContent = data.cartCount;
-
-                                // Visual feedback
-                                const originalIcon = this.innerHTML;
-                                this.innerHTML = '<i class="fa-solid fa-check"></i>';
-                                this.style.background = '#10b981'; // Success green
-
-                                setTimeout(() => {
-                                    this.innerHTML = originalIcon;
-                                    this.style.background = ''; // Back to CSS default
-                                }, 2000);
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                });
+                    .catch(error => console.error('Error:', error));
             });
 
             // User Dropdown Toggle
@@ -581,6 +688,23 @@
                             modalBtnAdd.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> <span>Ajouter au panier</span>';
                             modalBtnAdd.style.background = '';
                         }
+                        const modalBtnDetail = document.getElementById('modal-btn-detail');
+                        if (modalBtnDetail) {
+                            modalBtnDetail.href = '/produit/' + p.id;
+                        }
+
+                        const modalBtnWishlist = document.getElementById('modal-btn-wishlist');
+                        if (modalBtnWishlist) {
+                            modalBtnWishlist.setAttribute('data-product-id', p.id);
+                            const heartIcon = modalBtnWishlist.querySelector('i');
+                            if (p.is_favorite) {
+                                modalBtnWishlist.classList.add('active');
+                                if (heartIcon) heartIcon.className = 'fa-solid fa-heart';
+                            } else {
+                                modalBtnWishlist.classList.remove('active');
+                                if (heartIcon) heartIcon.className = 'fa-regular fa-heart';
+                            }
+                        }
 
                         if (modalLoader) modalLoader.style.display = 'none';
                         if (modalBody) modalBody.style.display = 'block';
@@ -680,42 +804,113 @@
 
             // Intercept clicks on product cards & detail links
             document.addEventListener('click', function(e) {
-                // Ignore if clicked on an add-to-cart button or modal internal controls
-                if (e.target.closest('.add-to-cart') || e.target.closest('#modal-btn-add') || e.target.closest('.modal-qty-selector') || e.target.closest('.product-modal-card')) {
+                // Ignore if clicked on an add-to-cart button, wishlist button or inside modal buttons
+                if (e.target.closest('.add-to-cart') || 
+                    e.target.closest('.btn-wishlist-toggle') ||
+                    e.target.closest('#modal-btn-add') || 
+                    e.target.closest('.modal-qty-selector') || 
+                    e.target.closest('#modal-btn-detail') ||
+                    e.target.closest('#modal-close-btn')) {
                     return;
                 }
 
-                const productLink = e.target.closest('a[href*="/produit/"]');
-                const productCard = e.target.closest('.product-card, .deal-card');
+                // If already inside the open modal card, do not re-trigger
+                if (e.target.closest('.product-modal-card')) {
+                    return;
+                }
+
+                const productLink = e.target.closest('a[href*="/produit"]');
+                const productCard = e.target.closest('.product-card, .deal-card, .luxury-product-card, .nouv-product-card');
 
                 let targetId = null;
 
-                if (productLink && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
-                    const match = productLink.getAttribute('href').match(/\/produit\/(\d+)/);
-                    if (match) {
-                        e.preventDefault();
-                        targetId = match[1];
-                    }
-                } else if (productCard) {
-                    const link = productCard.querySelector('a[href*="/produit/"]');
-                    if (link) {
-                        const match = link.getAttribute('href').match(/\/produit\/(\d+)/);
-                        if (match) {
-                            e.preventDefault();
-                            targetId = match[1];
-                        }
+                // Priority 1: Card click
+                if (productCard) {
+                    if (productCard.dataset && productCard.dataset.id) {
+                        targetId = productCard.dataset.id;
                     } else if (productCard.id && productCard.id.startsWith('product-')) {
                         targetId = productCard.id.replace('product-', '');
+                    } else {
+                        const link = productCard.querySelector('a[href*="/produit"]');
+                        if (link) {
+                            const match = link.getAttribute('href').match(/\/produit[s]?\/(\d+)/);
+                            if (match) targetId = match[1];
+                        }
+                    }
+
+                    if (targetId) {
+                        e.preventDefault();
+                        openProductModal(targetId);
+                        return;
                     }
                 }
 
-                if (targetId) {
-                    openProductModal(targetId);
+                // Priority 2: Standalone product detail links
+                if (productLink && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+                    const match = productLink.getAttribute('href').match(/\/produit[s]?\/(\d+)/);
+                    if (match) {
+                        e.preventDefault();
+                        targetId = match[1];
+                        openProductModal(targetId);
+                    }
                 }
             });
         });
+
+        // Toggle Wishlist Global Function
+        window.toggleWishlist = function(productId, btn) {
+            if (!productId) return;
+            
+            if (btn) btn.classList.add('heart-pop');
+
+            fetch(`/favoris/toggle/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const allProductBtns = document.querySelectorAll(`.btn-wishlist-toggle[data-product-id="${productId}"]`);
+                    allProductBtns.forEach(b => {
+                        const icon = b.querySelector('i');
+                        if (data.added) {
+                            b.classList.add('active');
+                            b.setAttribute('title', 'Retirer des favoris');
+                            if (icon) {
+                                icon.classList.remove('fa-regular');
+                                icon.classList.add('fa-solid');
+                            }
+                        } else {
+                            b.classList.remove('active');
+                            b.setAttribute('title', 'Ajouter aux favoris');
+                            if (icon) {
+                                icon.classList.remove('fa-solid');
+                                icon.classList.add('fa-regular');
+                            }
+                        }
+                    });
+
+                    const badges = document.querySelectorAll('.wishlist-count, #wishlist-count-badge, .mobile-wishlist-count');
+                    badges.forEach(b => {
+                        b.textContent = data.count;
+                    });
+                }
+            })
+            .catch(err => console.error('Erreur favoris:', err))
+            .finally(() => {
+                if (btn) {
+                    setTimeout(() => btn.classList.remove('heart-pop'), 400);
+                }
+            });
+        };
     </script>
     @stack('scripts')
+
+    
 </body>
 
 </html>

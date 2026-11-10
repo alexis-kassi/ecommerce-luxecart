@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Produit;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -53,13 +56,25 @@ class CartController extends Controller
             ];
         }
 
-        return view('cart', compact('produits', 'total'));
+        // Données promo (depuis la session)
+        $promoCode     = session('promo_code');
+        $promoLabel    = session('promo_label');
+        $promoDiscount = (float) session('promo_discount', 0);
+        $totalFinal    = max(0, $total - $promoDiscount);
+
+        return view('cart', compact(
+            'produits', 'total',
+            'promoCode', 'promoLabel', 'promoDiscount', 'totalFinal'
+        ));
     }
 
     /**
      * Ajoute un produit au panier (ou incrémente la quantité s'il est déjà présent).
+     *
+     * - Requête AJAX / JSON  => réponse JSON
+     * - Formulaire classique => retour à la page précédente avec un message
      */
-    public function add(Request $request, $id)
+    public function add(Request $request, $id): JsonResponse|RedirectResponse
     {
         Produit::findOrFail($id); // Vérifie que le produit existe
         $quantite  = max(1, (int) $request->input('quantite', 1));
@@ -74,19 +89,24 @@ class CartController extends Controller
         } else {
             Cart::create([
                 'session_id' => $sessionId,
-                'user_id'    => auth()->id(), // null si invité
                 'produit_id' => $id,
+                'user_id' => Auth::id(),  
                 'quantite'   => $quantite,
             ]);
         }
 
-        $totalCount = Cart::where('session_id', $sessionId)->sum('quantite');
+        $totalCount = (int) Cart::where('session_id', $sessionId)->count();
+        $message    = 'Produit ajouté au panier !';
 
-        return response()->json([
-            'success'   => true,
-            'message'   => 'Produit ajouté au panier !',
-            'cartCount' => $totalCount,
-        ]);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success'   => true,
+                'message'   => $message,
+                'cartCount' => $totalCount,
+            ]);
+        }
+
+        return back()->with('success', $message);
     }
 
     /**
@@ -115,13 +135,13 @@ class CartController extends Controller
     /**
      * Supprime un article du panier.
      */
-    public function remove($id)
+    public function remove(Request $request, $id)
     {
         Cart::where('session_id', $this->sessionId())
             ->where('produit_id', $id)
             ->delete();
 
-        if (request()->ajax() || request()->wantsJson()) {
+        if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Produit retiré du panier.',
@@ -136,8 +156,7 @@ class CartController extends Controller
      */
     public function getCount()
     {
-        $count = Cart::where('session_id', $this->sessionId())->sum('quantite');
+        $count = (int) Cart::where('session_id', $this->sessionId())->count();  
         return response()->json(['count' => $count]);
     }
 }
-

@@ -8,80 +8,30 @@
     <main class="nouveautes-page">
 
         <!-- ========================================================
-             1. HERO SECTION - NOUVEAUTÉS 2026
+             1. EN-TÊTE ÉPURÉ NOUVEAUTÉS (Sans Hero)
              ======================================================== -->
-        <section class="nouveautes-hero">
-            <div class="nouveautes-hero-blob blob-1"></div>
-            <div class="nouveautes-hero-blob blob-2"></div>
-
-            <div class="container nouveautes-hero-wrapper animate-fade-up">
-                <!-- Côté gauche : Titre & Valeur ajoutée -->
-                <div class="nouveautes-hero-left">
-                    <span class="nouveautes-badge">
-                        <i class="fa-solid fa-sparkles"></i>
-                        Arrivages & Collections 2026
-                    </span>
-
-                    <h1 class="nouveautes-title">
-                        Les Dernières <br>
-                         Nouveautés :<br>
-                        Tendances exclusives <br><em style="2rem;">fraîchement arrivées.</em>
+        <header class="nouv-header-strip">
+            <div class="container nouv-header-inner">
+                <div class="nouv-title-group">
+                    <nav class="nouv-breadcrumb" aria-label="Fil d'Ariane">
+                        <a href="{{ url('/') }}"><i class="fa-solid fa-house"></i> Accueil</a>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.65rem; opacity: 0.5;"></i>
+                        <span>Nouveautés</span>
+                    </nav>
+                    <h1>
+                        Dernières Nouveautés
+                        <span class="nouv-title-badge">{{ count($produits) }} pièces d'exception</span>
                     </h1>
+                </div> 
 
-                    <p class="nouveautes-desc">
-                        Découvrez en exclusivité nos arrivages de la semaine. Des pièces rares, des articles de mode raffinés et des équipements high-tech de dernière génération importés directement pour vous.
-                    </p>
-
-                    <div class="nouveautes-feature-chips">
-                        <span class="feature-chip">
-                            <i class="fa-solid fa-sparkles"></i>
-                            100% Nouveaux Modèles
-                        </span>
-                        <span class="feature-chip">
-                            <i class="fa-solid fa-bolt"></i>
-                            Éditions & Stocks Limités
-                        </span>
-                        <span class="feature-chip">
-                            <i class="fa-solid fa-truck-fast"></i>
-                            Expédition Express 24h
-                        </span>
-                    </div>
+                <!-- Micro-réassurance discrète -->
+                <div class="nouv-trust-badges-inline">
+                    <span class="trust-tag"><i class="fa-solid fa-sparkles"></i> 100% Nouveaux Modèles</span>
+                    <span class="trust-tag"><i class="fa-solid fa-bolt"></i> Pièces Rares &amp; Exclusives</span>
+                    <span class="trust-tag"><i class="fa-solid fa-truck-fast"></i> Livraison Express 24h</span>
                 </div>
-
-                <!-- Côté droit : Produit Spotlight Coup de Cœur -->
-                @if(isset($spotlight) && $spotlight)
-                    <div class="nouveautes-hero-right">
-                        <div class="spotlight-card">
-                            <div class="spotlight-tag-row">
-                                <span class="spotlight-tag-pill">
-                                    <i class="fa-solid fa-fire"></i> Coup de Cœur
-                                </span>
-                                <span class="spotlight-tag-cat">{{ $spotlight->categorie ?? 'Nouveauté' }}</span>
-                            </div>
-
-                            <div class="spotlight-img-wrap">
-                                <a href="{{ route('products.show', $spotlight->id) }}">
-                                    <img src="{{ asset($spotlight->image ?? 'images/placeholder-product.jpg') }}" alt="{{ $spotlight->nom }}">
-                                </a>
-                            </div>
-
-                            <div class="spotlight-info">
-                                <h4>
-                                    <a href="{{ route('products.show', $spotlight->id) }}">{{ $spotlight->nom }}</a>
-                                </h4>
-                                <div class="spotlight-price-row">
-                                    <span class="spotlight-price">{{ number_format($spotlight->prix, 0, ',', ' ') }} FCFA</span>
-                                    <a href="{{ route('products.show', $spotlight->id) }}" class="spotlight-btn">
-                                        <span>Découvrir</span>
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
             </div>
-        </section>
+        </header>
 
 
         <!-- ========================================================
@@ -131,16 +81,16 @@
 
                         <select class="nouveautes-sort-select" onchange="location = this.value;">
                             <option value="{{ route('nouveautes', array_merge(request()->except(['sort', 'page']), ['sort' => 'latest'])) }}" {{ ($sort ?? '') === 'latest' ? 'selected' : '' }}>
-                                ✨ Plus récents d'abord
+                                 Plus récents d'abord
                             </option>
                             <option value="{{ route('nouveautes', array_merge(request()->except(['sort', 'page']), ['sort' => 'price_asc'])) }}" {{ ($sort ?? '') === 'price_asc' ? 'selected' : '' }}>
-                                💰 Prix croissant
+                                 Prix croissant
                             </option>
                             <option value="{{ route('nouveautes', array_merge(request()->except(['sort', 'page']), ['sort' => 'price_desc'])) }}" {{ ($sort ?? '') === 'price_desc' ? 'selected' : '' }}>
-                                💎 Prix décroissant
+                                 Prix décroissant
                             </option>
                             <option value="{{ route('nouveautes', array_merge(request()->except(['sort', 'page']), ['sort' => 'name_asc'])) }}" {{ ($sort ?? '') === 'name_asc' ? 'selected' : '' }}>
-                                🔤 Nom A-Z
+                                 Nom A-Z
                             </option>
                         </select>
                     </div>
@@ -154,16 +104,34 @@
              ======================================================== -->
         <section class="container nouveautes-products-section">
             @if(isset($produits) && count($produits) > 0)
+            
                 <div class="nouveautes-grid">
                     @foreach($produits as $produit)
-                        <article class="nouv-product-card" id="product-{{ $produit->id }}">
+                        <article class="nouv-product-card" id="product-{{ $produit->id }}"
+                                 style="--card-delay: {{ min($loop->index * 0.045, 0.65) }}s; cursor:pointer;"
+                                 data-id="{{ $produit->id }}"
+                                 data-nom="{{ addslashes($produit->nom) }}"
+                                 data-desc="{{ addslashes(Str::limit($produit->description ?? 'Produit exclusif LuxeCart.', 200)) }}"
+                                 data-categorie="{{ $produit->categorie }}"
+                                 data-prix="{{ number_format($produit->prix, 0, ',', ' ') }}"
+                                 data-stock="{{ $produit->stock }}"
+                                 data-image="{{ asset($produit->image ?? 'images/placeholder-product.jpg') }}"
+                                 style="cursor:pointer;">
                             <!-- Image et Badges -->
                             <div class="nouv-card-img-wrap">
-                                <a href="{{ route('products.show', $produit->id) }}" style="display: block; width: 100%; height: 100%;">
-                                    <img src="{{ asset($produit->image ?? 'images/placeholder-product.jpg') }}" 
-                                         alt="{{ $produit->nom }}" 
-                                         loading="lazy">
-                                </a>
+                                <img src="{{ asset($produit->image ?? 'images/placeholder-product.jpg') }}"
+                                     alt="{{ $produit->nom }}"
+                                     loading="lazy">
+
+                                <!-- Bouton Favoris -->
+                                @php $isFav = isset(session('wishlist', [])[$produit->id]); @endphp
+                                <button type="button" 
+                                        class="btn-wishlist-toggle {{ $isFav ? 'active' : '' }}" 
+                                        data-product-id="{{ $produit->id }}" 
+                                        onclick="event.stopPropagation(); toggleWishlist({{ $produit->id }}, this);" 
+                                        title="{{ $isFav ? 'Retirer des favoris' : 'Ajouter aux favoris' }}">
+                                    <i class="{{ $isFav ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                                </button>
 
                                 <span class="nouv-badge-nouveau">
                                     <i class="fa-solid fa-sparkles"></i> Nouveau
@@ -172,50 +140,12 @@
                                 @if(!empty($produit->categorie))
                                     <span class="nouv-badge-cat">{{ $produit->categorie }}</span>
                                 @endif
-                            </div>
 
-                            <!-- Corps de la carte -->
-                            <div class="nouv-card-body">
-                                <!-- Étoiles d'avis -->
-                                <div class="nouv-card-rating">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star-half-stroke"></i>
-                                    <span class="nouv-rating-val">4.9 ({{ rand(18, 95) }})</span>
-                                </div>
-
-                                <h3 class="nouv-card-title">
-                                    <a href="{{ route('products.show', $produit->id) }}">{{ $produit->nom }}</a>
-                                </h3>
-
-                                <p class="nouv-card-desc">
-                                    {{ Str::limit($produit->description ?? 'Produit exclusif et authentique de la collection LuxeCart.', 80) }}
-                                </p>
-
-                                <!-- Disponibilité -->
-                                <div class="nouv-card-stock {{ ($produit->stock ?? 1) > 3 ? 'in-stock' : 'low-stock' }}">
-                                    <span class="stock-dot"></span>
-                                    <span>{{ ($produit->stock ?? 1) > 3 ? 'En stock (' . $produit->stock . ' dispo)' : 'Stock très limité' }}</span>
-                                </div>
-
-                                <!-- Pied de la carte : Prix & Action Ajout au Panier -->
-                                <div class="nouv-card-footer">
-                                    <div class="nouv-price-block">
-                                        <span class="nouv-price-label">Prix unitaire</span>
-                                        <span class="nouv-price-val">
-                                            {{ number_format($produit->prix, 0, ',', ' ') }} <small>FCFA</small>
-                                        </span>
-                                    </div>
-
-                                    <button type="button" 
-                                            class="nouv-add-btn add-to-cart" 
-                                            data-id="{{ $produit->id }}" 
-                                            id="add-{{ $produit->id }}" 
-                                            title="Ajouter au panier">
-                                        <i class="fa-solid fa-cart-plus"></i>
-                                    </button>
+                                <!-- Hover Overlay avec le nom -->
+                                <div class="nouv-card-hover-overlay">
+                                    <span class="nouv-hover-name">{{ $produit->nom }}</span>
+                                    <span class="nouv-hover-price">{{ number_format($produit->prix, 0, ',', ' ') }} FCFA</span>
+                                    <span class="nouv-hover-cta"><i class="fa-regular fa-eye"></i> Voir le produit</span>
                                 </div>
                             </div>
                         </article>
@@ -283,4 +213,84 @@
         </section>
 
     </main>
+
+    <!-- ===== STYLES HOVER OVERLAY (Nouveautés) ===== -->
+<style>
+    /* Image wrapper full-card */
+     .nouv-product-card {
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+        position: relative;
+        cursor: pointer;
+    }
+    .nouv-product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 24px 48px rgba(0,0,0,0.16);
+    }
+    .nouv-card-img-wrap {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        aspect-ratio: 3/4;
+        background: #f1f5f9;
+    }
+    .nouv-card-img-wrap img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .nouv-product-card:hover .nouv-card-img-wrap img {
+        transform: scale(1.08);
+    }
+
+    /* Hover Overlay */
+    .nouv-card-hover-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1.8rem 1.2rem 1.3rem;
+        background: linear-gradient(to top,
+            rgba(9, 13, 25, 0.93) 0%,
+            rgba(9, 13, 25, 0.55) 55%,
+            transparent 100%);
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        opacity: 0;
+        transform: translateY(14px);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+        z-index: 5;
+    }
+    .nouv-product-card:hover .nouv-card-hover-overlay {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .nouv-hover-name {
+        font-family: 'Outfit', var(--font-outfit, sans-serif);
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #ffffff;
+        line-height: 1.3;
+    }
+    .nouv-hover-price {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #a5b4fc;
+    }
+    .nouv-hover-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: rgba(255,255,255,0.7);
+        margin-top: 0.2rem;
+    }
+
+</style>
+
 @endsection

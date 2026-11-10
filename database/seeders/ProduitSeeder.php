@@ -19,25 +19,25 @@ class ProduitSeeder extends Seeder
             'nom' => 'Téléphone',
             'description' => 'Smartphone performant',
             'prix' => 150000,
-            'stock' => 10,
+            'stock' => 6,
             'categorie' => 'Électronique',
             'image' => 'images/imgTelephone1.jpg'
         ]);
 
         Produit::create([
-            'nom' => 'Ordinateur',
+            'nom' => 'macbook pro',
             'description' => 'PC portable rapide',
             'prix' => 350000,
-            'stock' => 5,
+            'stock' => 6,
             'categorie' => 'Électronique',
-            'image' => 'images/imgOrdinateur1.jpg'
+            'image' => 'images/macbook.jpg'
         ]);
 
         Produit::create([
             'nom' => 'Casque Audio Sans Fil',
             'description' => 'Casque Bluetooth haute fidélité avec réduction active de bruit.',
             'prix' => 75000,
-            'stock' => 8,
+            'stock' => 6,
             'categorie' => 'Électronique',
             'image' => 'images/imgCasqueAudio.jpg'
         ]);
@@ -48,14 +48,14 @@ class ProduitSeeder extends Seeder
             'prix' => 220000,
             'stock' => 6,
             'categorie' => 'Électronique',
-            'image' => 'images/imgTablette.jpg'
+            'image' => 'images/tablette.jpg'
         ]);
 
         Produit::create([
             'nom' => 'Enceinte Bluetooth',
             'description' => 'Enceinte sans fil compacte, son immersif à 360° et grande autonomie.',
             'prix' => 45000,
-            'stock' => 12,
+            'stock' => 6,
             'categorie' => 'Électronique',
             'image' => 'images/imgEnceinte.jpg'
         ]);
@@ -64,7 +64,7 @@ class ProduitSeeder extends Seeder
             'nom' => 'Montre de Luxe',
             'description'=> 'Une montre élégante pour toutes occasions, déjà disponible pour vous.',
             'prix' => '120000',
-            'stock' => '6',
+            'stock' => 6,
             'categorie'=> 'Accessoires Mode',
             'image' => 'images/imgMontre.jpg'
         ]);
@@ -73,7 +73,7 @@ class ProduitSeeder extends Seeder
             'nom' => 'Montre Connectée',
             'description' => 'Une montre connectée très performante',
             'prix' => '145000',
-            'stock' => '5',
+            'stock' => 6,
             'categorie' => 'Accessoires Mode',
             'image' => 'images/imgMontreConnectee.jpg'
         ]);
@@ -82,7 +82,7 @@ class ProduitSeeder extends Seeder
             'nom' => 'Sac à main homme',
             'description' => 'Sac à main très complet',
             'prix' => '30000',
-            'stock' => '7',
+            'stock' => 6,
             'categorie' => 'Accessoires Mode',
             'image' => 'images/imgSacAMainHomme.jpg'
         ]);
@@ -91,7 +91,7 @@ class ProduitSeeder extends Seeder
             'nom' => 'Sac à main Dame',
             'description' => 'Sac à main Dame, disponible pour vous, très solide et très pratique',
             'prix' => '32000',
-            'stock' => '4',
+            'stock' => 6,
             'categorie' => 'Accessoires Mode',
             'image' => 'images/imgSacAMainDame.jpg'
         ]);
@@ -100,9 +100,18 @@ class ProduitSeeder extends Seeder
             'nom' => 'Sac à dos',
             'description' => 'Sac à dos disponible pour vous, bien solide et très pratique.',
             'prix' => '45000',
-            'stock' => '7',
+            'stock' => 6,   
             'categorie' => 'Accessoires Mode',
             'image' => 'images/imgSacADos.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Ceinture en Cuir Véritable',
+            'description' => 'Ceinture élégante en cuir véritable avec boucle en métal brossé, finitions soignées pour costume ou tenue casual.',
+            'prix' => 18000,
+            'stock' => 6,
+            'categorie' => 'Accessoires Mode',
+            'image' => 'images/ceinture.jpg'
         ]);
         Produit::create([
             'nom' => 'T-shirt',
@@ -117,7 +126,7 @@ class ProduitSeeder extends Seeder
             'nom' => 'Chemise',
             'description' => 'Chemise solide à base du coton',
             'prix' => 6000,
-            'stock' => 12,
+            'stock' => 6,
             'categorie' => 'Vêtement',
             'image' => 'images/imgChemise.jpg'
         ]);
@@ -126,7 +135,7 @@ class ProduitSeeder extends Seeder
             'nom' => 'Pull en Laine',
             'description' => 'Pull en laine premium, chaud et confortable, idéal pour les soirées fraîches.',
             'prix' => 18000,
-            'stock' => 10,
+            'stock' => 6,
             'categorie' => 'Vêtement',
             'image' => 'images/imgPull.jpg'
         ]);
@@ -135,7 +144,7 @@ class ProduitSeeder extends Seeder
             'nom' => 'Pantalon Chino',
             'description' => 'Pantalon chino slim fit, coupe moderne et élégante, parfait pour toutes occasions.',
             'prix' => 15000,
-            'stock' => 8,
+            'stock' => 6,
             'categorie' => 'Vêtement',
             'image' => 'images/imgPantalon.jpg'
         ]);
@@ -144,7 +153,7 @@ class ProduitSeeder extends Seeder
             'nom' => 'Short Casual',
             'description' => 'Short décontracté en coton léger, confortable pour l\'été.',
             'prix' => 8000,
-            'stock' => 15,
+            'stock' => 6,
             'categorie' => 'Vêtement',
             'image' => 'images/imgShort.jpg'
         ]);
@@ -163,7 +172,7 @@ class ProduitSeeder extends Seeder
             'nom' => ' Chaussure Nike',
             'description' => 'Chaussure Nike très solide',
             'prix' => 20000,
-            'stock' => 10,
+            'stock' => 6,
             'categorie' => 'Chaussure',
             'image' => 'images/imgChaussureNike.jpg'
         ]);
@@ -172,9 +181,36 @@ class ProduitSeeder extends Seeder
             'nom' => 'Chaussure adidas',
             'description' => 'Chaussure Nike très solide',
             'prix' => 22000,
-            'stock' => 15,
+            'stock' => 6,
             'categorie' => 'Chaussure',
             'image' => 'images/imgChaussureAdidas.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Mocassins en Cuir Élégance',
+            'description' => 'Mocassins raffinés en cuir véritable avec semelle cousue main, alliant élégance italienne et confort absolu.',
+            'prix' => 35000,
+            'stock' => 6,
+            'categorie' => 'Chaussure',
+            'image' => 'images/mocassins.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Sneakers Blanches Minimalistes',
+            'description' => 'Baskets basses épurées en cuir doux avec semelle renforcée, idéales pour un look urbain et contemporain.',
+            'prix' => 25000,
+            'stock' => 6,
+            'categorie' => 'Chaussure',
+            'image' => 'images/sneakers.jpg'
+        ]);
+
+        Produit::create([
+            'nom' => 'Bottines Chelsea en Cuir',
+            'description' => 'Bottines élégantes en cuir noir avec élastiques latéraux et semelle crantée, alliance parfaite de style et robustesse.',
+            'prix' => 42000,
+            'stock' => 6,
+            'categorie' => 'Chaussure',
+            'image' => 'images/chelsea_boots.jpg'
         ]);
 
         // LES NOUVEAUX PRODUITS
@@ -182,16 +218,16 @@ class ProduitSeeder extends Seeder
             'nom' => 'lunette',
             'description' => 'Structure tenant les verres, fabriquée en métal, plastique (acétate) ou matériaux mixtes.',
             'prix' => 35000,
-            'stock'=> 5,
+            'stock'=> 6,
             'categorie' => 'Nouveautés',
-            'image' => 'images/lunette1.jpg',
+            'image' => 'images/lunette.jpg',
         ]);
 
          Produit::create([
             'nom' => 'lunette',
             'description' => 'Structure tenant les verres, fabriquée en métal, plastique (acétate) ou matériaux mixtes.',
             'prix' => 34000,
-            'stock'=> 3,
+            'stock'=> 6,
             'categorie' => 'Nouveautés',
             'image' => 'images/lunette2.jpg',
         ]);
@@ -200,7 +236,7 @@ class ProduitSeeder extends Seeder
             'nom' => 'Portefeuille',
             'description' => 'Un portefeuille très spacieux et solide',
             'prix' => 4000,
-            'stock' => 3,
+            'stock' => 6,
             'categorie' => 'Nouveautés',
             'image' => 'images/portf1.jpg',
         ]);
@@ -209,7 +245,7 @@ class ProduitSeeder extends Seeder
             'nom' => 'Portefeuille',
             'description' => 'Un portefeuille très spacieux et solide',
             'prix' => 4500,
-            'stock' => 3,
+            'stock' => 6,
             'categorie' => 'Nouveautés',
             'image' => 'images/portf2.jpg',
         ]);
@@ -218,7 +254,7 @@ class ProduitSeeder extends Seeder
             'nom' => 'Claquettes Ergonomiques Confort',
             'description' => 'Claquettes légères et stylées avec semelle amortissante antidérapante, confort absolu au quotidien.',
             'prix' => 15000,
-            'stock' => 12,
+            'stock' => 6,
             'categorie' => 'Chaussure',
             'image' => 'images/claquettes.jpg'
         ]);
@@ -227,7 +263,7 @@ class ProduitSeeder extends Seeder
             'nom' => 'Mixeur Blender Électrique Inox',
             'description' => 'Mixeur blender haute performance en acier inoxydable avec bol gradué et lames ultra-résistantes.',
             'prix' => 38000,
-            'stock' => 8,
+            'stock' => 6,
             'categorie' => 'Électronique',
             'image' => 'images/mixer.jpg'
         ]);

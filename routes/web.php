@@ -31,6 +31,24 @@ Route::delete('/cart/remove/{id}', [CartController::class,
 Route::get('/cart/count', [CartController::class,
  'getCount'])->name('cart.count');
 
+// Promo Code Routes
+use App\Http\Controllers\PromoController;
+
+Route::post('/cart/promo/apply', [PromoController::class, 'apply'])->name('cart.promo.apply');
+Route::post('/cart/promo/remove', [PromoController::class, 'remove'])->name('cart.promo.remove');
+
+// Avis & Notes clients
+use App\Http\Controllers\AvisController;
+Route::post('/produit/{id}/avis', [AvisController::class, 'store'])->name('avis.store');
+
+// Wishlist Routes
+use App\Http\Controllers\WishlistController;
+
+Route::get('/favoris', [WishlistController::class, 'index'])->name('wishlist.index');
+Route::post('/favoris/toggle/{id}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+Route::delete('/favoris/remove/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+Route::get('/favoris/count', [WishlistController::class, 'count'])->name('wishlist.count');
+
 // Checkout Routes
 use App\Http\Controllers\CheckoutController;
 

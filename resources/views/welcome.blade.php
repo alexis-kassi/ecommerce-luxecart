@@ -15,13 +15,13 @@
                 </span>
 
                 <h1 class="about-split-title">
-                    L'Élégance <span style="font-size: 3.6rem;">au Quotidien</span> :<br>
-                    Le style d'exception <br><em style="font-size: 3.6rem;">à votre portée.</em>
+                    L'Élégance <span style="font-size: 45px">au Quotidien: </span>
+                    Le style d'exception à votre portée.  
                 </h1>
 
                 <p class="about-split-desc">
                     Découvrez une sélection exclusive de mode, maroquinerie, accessoires et technologie haut de gamme. Importés des plus grandes marques internationales et livrés chez vous en un temps record partout en Côte d'Ivoire.
-                </p>
+                </p><br>
 
                 <div class="about-split-stats">
                     <div class="stat-item">
@@ -54,6 +54,7 @@
             <div class="about-split-right">
                 <div class="about-media-wrap">
                     <div class="about-media-main home-hero-slider-main">
+
                         <!-- Slides d'images -->
                         <div class="home-hero-slide active">
                             <img src="{{ asset('images/imgH1.jpg') }}" alt="LuxeCart - Prêt-à-porter & Mode">
@@ -64,7 +65,7 @@
                         </div>
 
                         <div class="home-hero-slide">
-                            <img src="{{ asset('images/imgH2.jpg') }}" alt="LuxeCart - Accessoires de Luxe">
+                            <img src="{{ asset('images/vet41.jpg') }}" alt="LuxeCart - Accessoires de Luxe">
                             <div class="home-slide-caption">
                                 <span class="home-slide-badge">Accessoires & Bijoux</span>
                                 <h4>Maroquinerie & Montres</h4>
@@ -80,7 +81,7 @@
                         </div>
 
                         <div class="home-hero-slide">
-                            <img src="{{ asset('images/imgChaussureAdidas.jpg') }}" alt="LuxeCart - Chaussures & Sneakers">
+                            <img src="{{ asset('images/imgHsac.jpg') }}" alt="LuxeCart - Chaussures & Sneakers">
                             <div class="home-slide-caption">
                                 <span class="home-slide-badge">Sneakers & Chaussures</span>
                                 <h4>Style Urbain & Sportswear</h4>
@@ -91,6 +92,7 @@
                         <button class="hero-split-nav hero-split-prev" id="heroSliderPrev" aria-label="Slide précédente">
                             <i class="fa-solid fa-chevron-left"></i>
                         </button>
+
                         <button class="hero-split-nav hero-split-next" id="heroSliderNext" aria-label="Slide suivante">
                             <i class="fa-solid fa-chevron-right"></i>
                         </button>
@@ -117,6 +119,7 @@
                         <i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star-half-stroke"></i>
                     </div>
+
                     <div class="review-note">
                         <span>4.9</span>/5
                     </div>
@@ -157,7 +160,15 @@
             height: 100%;
             overflow: hidden;
             border-radius: 32px;
-            background: #0f172a;
+            background: transparent !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: 0 20px 50px -15px rgba(99, 102, 241, 0.22) !important;
+        }
+
+        .about-media-main.home-hero-slider-main {
+            border: none !important;
+            background: transparent !important;
         }
 
         .home-hero-slide {
@@ -167,6 +178,8 @@
             visibility: hidden;
             transition: opacity 0.75s ease-in-out, visibility 0.75s ease-in-out;
             z-index: 1;
+            border-radius: 32px;
+            overflow: hidden;
         }
 
         .home-hero-slide.active {
@@ -179,6 +192,8 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 32px;
+            border: none !important;
             transform: scale(1.04);
             transition: transform 6s ease-out;
         }
@@ -187,20 +202,22 @@
             transform: scale(1);
         }
 
-        /* Overlay dégradé subtil avec texte du slide */
+        /* Overlay texte du slide (sans fond noir agressif sur la bordure) */
         .home-slide-caption {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
             padding: 2.5rem 1.8rem 1.6rem;
-            background: linear-gradient(to top, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.45) 60%, transparent 100%);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.08) 55%, transparent 100%);
             color: #ffffff;
             z-index: 3;
             display: flex;
             flex-direction: column;
             gap: 0.3rem;
             pointer-events: none;
+            border-bottom-left-radius: 32px;
+            border-bottom-right-radius: 32px;
         }
 
         .home-slide-badge {
@@ -388,31 +405,36 @@
     </script>
 
 
-
     <!-- 2. Trust Indicators Section (Nouveau) -->
     <section style="background-color: white; padding: 3rem 0; border-bottom: 1px solid #f1f5f9;">
+
         <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: center;">
             <div style="padding: 1rem;">
                 <i class="fa-solid fa-truck-fast" style="font-size: 1.8rem; color: #0f172a; margin-bottom: 1rem;"></i>
                 <h3 style="font-family: var(--font-outfit); font-size: 1.1rem; color: #0f172a; font-weight: 600; margin-bottom: 0.5rem;">Livraison Rapide</h3>
                 <p style="color: #64748b; font-size: 0.95rem;">Partout en Côte d'Ivoire en un temps record.</p>
             </div>
+
             <div style="padding: 1rem;">
                 <i class="fa-solid fa-shield-halved" style="font-size: 1.8rem; color: #0f172a; margin-bottom: 1rem;"></i>
                 <h3 style="font-family: var(--font-outfit); font-size: 1.1rem; color: #0f172a; font-weight: 600; margin-bottom: 0.5rem;">Paiement Sécurisé</h3>
                 <p style="color: #64748b; font-size: 0.95rem;">Payez à la livraison ou via mobile money.</p>
             </div>
+
             <div style="padding: 1rem;">
                 <i class="fa-regular fa-star" style="font-size: 1.8rem; color: #0f172a; margin-bottom: 1rem;"></i>
                 <h3 style="font-family: var(--font-outfit); font-size: 1.1rem; color: #0f172a; font-weight: 600; margin-bottom: 0.5rem;">Qualité Premium</h3>
                 <p style="color: #64748b; font-size: 0.95rem;">Une sélection rigoureuse des meilleurs articles.</p>
             </div>
+
             <div style="padding: 1rem;">
                 <i class="fa-solid fa-headset" style="font-size: 1.8rem; color: #0f172a; margin-bottom: 1rem;"></i>
                 <h3 style="font-family: var(--font-outfit); font-size: 1.1rem; color: #0f172a; font-weight: 600; margin-bottom: 0.5rem;">Support 24/7</h3>
                 <p style="color: #64748b; font-size: 0.95rem;">Une équipe toujours à votre écoute.</p>
             </div>
+
         </div>
+        
     </section>
 
     <!-- 3. Categories Section -->
@@ -476,7 +498,7 @@
 
 
             <!-- En-tête de section -->
-            <div class="featured-header">
+            <div class="featured-header scroll-reveal-header">
                 <div class="featured-header-left">
                     <span class="section-label">
                         <i class="fa-solid fa-fire-flame-curved"></i>
@@ -486,7 +508,7 @@
                         <h2 class="featured-title">Collection <span class="featured-title-accent">{{ $category }}</span></h2>
                         <p class="featured-subtitle">Découvrez notre sélection exclusive dans cette catégorie.</p>
                     @else
-                        <h2 class="featured-title">Nos <span class="featured-title-accent">Nouveautés</span></h2>
+                        <h2 class="featured-title">Nos Nouveautés</h2>
                         <p class="featured-subtitle">Les dernières pièces ajoutées à notre catalogue, sélectionnées pour vous.</p>
                     @endif
                 </div>
@@ -509,15 +531,32 @@
             <div class="products-grid">
                 @foreach($produits as $loop_produit)
                     @php $isNew = $loop_produit->created_at && $loop_produit->created_at->diffInDays(now()) <= 30; @endphp
-                    <div class="product-card" id="product-{{ $loop_produit->id }}">
+                    <div class="product-card scroll-reveal-card"
+                         style="--reveal-index: {{ $loop->index }};"
+                         id="product-{{ $loop_produit->id }}"
+                         data-id="{{ $loop_produit->id }}"
+                         data-nom="{{ addslashes($loop_produit->nom) }}"
+                         data-desc="{{ addslashes(Str::limit($loop_produit->description ?? 'Produit exclusif LuxeCart.', 200)) }}"
+                         data-categorie="{{ $loop_produit->categorie }}"
+                         data-prix="{{ number_format($loop_produit->prix, 0, ',', ' ') }}"
+                         data-stock="{{ $loop_produit->stock }}"
+                         data-image="{{ asset($loop_produit->image ?? 'images/placeholder-product.jpg') }}">
 
-                        <!-- Image -->
+                        <!-- Image seule + overlay hover -->
                         <div class="product-image-wrap">
-                            <a href="{{ route('products.show', $loop_produit->id) }}">
-                                <img src="{{ asset($loop_produit->image ?? 'images/placeholder-product.jpg') }}"
-                                     alt="{{ $loop_produit->nom }}"
-                                     class="product-img">
-                            </a>
+                            <img src="{{ asset($loop_produit->image ?? 'images/placeholder-product.jpg') }}"
+                                 alt="{{ $loop_produit->nom }}"
+                                 class="product-img">
+
+                            <!-- Bouton Favoris -->
+                            @php $isFav = isset(session('wishlist', [])[$loop_produit->id]); @endphp
+                            <button type="button" 
+                                    class="btn-wishlist-toggle {{ $isFav ? 'active' : '' }}" 
+                                    data-product-id="{{ $loop_produit->id }}" 
+                                    onclick="toggleWishlist({{ $loop_produit->id }}, this)" 
+                                    title="{{ $isFav ? 'Retirer des favoris' : 'Ajouter aux favoris' }}">
+                                <i class="{{ $isFav ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                            </button>
 
                             <!-- Badges -->
                             <div class="product-badges">
@@ -528,43 +567,16 @@
                             </div>
 
                             <!-- Stock indicator -->
-                            @if($loop_produit->stock <= 3)
+                            @if($loop_produit->stock <= 3 && $loop_produit->stock > 0)
                                 <span class="badge-stock-low">⚠ Derniers {{ $loop_produit->stock }}</span>
                             @endif
 
-                        </div>
-
-                        <!-- Infos produit -->
-                        <div class="product-info">
-                            <!-- Étoiles -->
-                            <div class="product-stars">
-                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <span>({{ rand(12, 89) }})</span>
+                            <!-- Hover Overlay avec le nom -->
+                            <div class="product-hover-overlay">
+                                <span class="product-hover-name">{{ $loop_produit->nom }}</span>
+                                <span class="product-hover-price">{{ number_format($loop_produit->prix, 0, ',', ' ') }} FCFA</span>
+                                <span class="product-hover-cta"><i class="fa-regular fa-eye"></i> Voir le produit</span>
                             </div>
-
-
-                            <h3 class="product-name">
-                                <a href="{{ route('products.show', $loop_produit->id) }}">{{ $loop_produit->nom }}</a>
-                            </h3>
-
-
-                            <p class="product-desc">{{ Str::limit($loop_produit->description, 55) }}</p>
-
-                            <div class="product-footer">
-                                <span class="product-price">{{ number_format($loop_produit->prix, 0, ',', ' ') }} <small>FCFA</small></span>
-                                <span class="product-stock-info">
-                                    <i class="fa-solid fa-circle" style="color: {{ $loop_produit->stock > 3 ? '#10b981' : '#f59e0b' }}; font-size: 0.5rem;"></i>
-                                    {{ $loop_produit->stock > 0 ? 'En stock' : 'Rupture' }}
-                                </span>
-                            </div>
-
-                            <!-- Bouton Ajouter au panier sous le prix -->
-                            <button class="add-to-cart btn-card-add" data-id="{{ $loop_produit->id }}" id="add-{{ $loop_produit->id }}" {{ $loop_produit->stock <= 0 ? 'disabled' : '' }}>
-                                <i class="fa-solid fa-cart-shopping"></i>
-                                <span>Ajouter au panier</span>
-                            </button>
                         </div>
                     </div>
                 @endforeach
@@ -588,6 +600,20 @@
             flex-wrap: wrap;
             gap: 1.5rem;
         }
+
+        .featured-header.scroll-reveal-header {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        .featured-header.scroll-reveal-header.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .section-label {
             display: inline-flex;
             align-items: center;
@@ -645,52 +671,74 @@
         /* Grid */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
             margin-bottom: 4rem;
         }
 
-        /* Card */
+        /* Card - image only with fluid scroll reveal */
         .product-card {
-            background: white;
-            border-radius: 16px;
+            border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            transition: transform 0.35s ease, box-shadow 0.35s ease;
-            display: flex;
-            flex-direction: column;
-        }
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            cursor: pointer;
+            position: relative;
         }
 
-        /* Image */
+        .product-card.scroll-reveal-card {
+            opacity: 0;
+            transform: translateY(38px) scale(0.96);
+            transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.35s ease;
+            transition-delay: calc(var(--reveal-index, 0) * 0.08s);
+            will-change: opacity, transform;
+        }
+
+        .product-card.scroll-reveal-card.revealed {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .product-card.scroll-reveal-card.revealed:hover {
+            transform: translateY(-8px) scale(1);
+            box-shadow: 0 24px 48px rgba(0,0,0,0.15);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.35s ease;
+            transition-delay: 0s !important;
+        }
+
+        /* Image wrapper - full card */
         .product-image-wrap {
             position: relative;
-            aspect-ratio: 4/5;
+            aspect-ratio: 3/4;
             overflow: hidden;
             background: #f1f5f9;
+            display: block;
+            width: 100%;
+            height: 100%;
         }
-        .product-image-wrap a { display: block; width: 100%; height: 100%; }
         .product-img {
             width: 100%; height: 100%;
             object-fit: cover;
-            transition: transform 0.6s ease;
+            display: block;
+            transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-        .product-card:hover .product-img { transform: scale(1.07); }
+        .product-card:hover .product-img { transform: scale(1.08); }
 
         /* Badges */
         .product-badges {
             position: absolute;
-            top: 0.9rem;
-            left: 0.9rem;
+            top: 0.85rem;
+            left: 0.85rem;
             display: flex;
             flex-direction: column;
             gap: 0.4rem;
+            z-index: 3;
         }
         .badge-category {
-            background: white;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(8px);
             color: #0f172a;
             font-size: 0.7rem;
             font-weight: 700;
@@ -710,109 +758,64 @@
         }
         .badge-stock-low {
             position: absolute;
-            top: 0.9rem;
-            right: 0.9rem;
-            background: #fff7ed;
+            top: 0.85rem;
+            right: 0.85rem;
+            background: rgba(255,247,237,0.95);
             color: #d97706;
             font-size: 0.7rem;
             font-weight: 700;
             padding: 0.3rem 0.75rem;
             border-radius: 50px;
             border: 1px solid #fde68a;
+            z-index: 3;
         }
 
-        /* Bouton Ajouter au panier sous le prix */
-        .product-card .btn-card-add {
-            width: 100%;
-            height: auto;
-            margin-top: 0.85rem;
-            background: #0f172a;
-            color: #ffffff;
-            border: none;
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            font-size: 0.88rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.55rem;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
-            letter-spacing: 0.01em;
-        }
-        .product-card .btn-card-add i {
-            font-size: 0.95rem;
-        }
-        .product-card .btn-card-add:hover {
-            background: #4f46e5;
-            color: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.25);
-        }
-        .product-card .btn-card-add:disabled {
-            background: #cbd5e1;
-            color: #64748b;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* Infos */
-        .product-info {
-            padding: 1.25rem 1.25rem 1.5rem;
-            flex: 1;
+        /* ===== HOVER OVERLAY NOM PRODUIT ===== */
+        .product-hover-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 1.2rem 1.2rem;
+            background: linear-gradient(to top,
+                rgba(9, 13, 25, 0.92) 0%,
+                rgba(9, 13, 25, 0.6) 55%,
+                transparent 100%);
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
+            gap: 0.3rem;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            z-index: 4;
         }
-        .product-stars {
-            display: flex;
-            align-items: center;
-            gap: 2px;
-            color: #f59e0b;
-            font-size: 0.75rem;
+        .product-card:hover .product-hover-overlay {
+            opacity: 1;
+            transform: translateY(0);
         }
-        .product-stars span { color: #94a3b8; margin-left: 4px; font-size: 0.78rem; }
-        .product-name {
-            font-family: var(--font-outfit);
-            font-size: 1.05rem;
+        .product-hover-name {
+            font-family: var(--font-outfit, 'Outfit', sans-serif);
+            font-size: 1rem;
             font-weight: 700;
-            color: #0f172a;
-            margin: 0;
+            color: #ffffff;
             line-height: 1.3;
+            letter-spacing: -0.01em;
         }
-        .product-name a { color: inherit; text-decoration: none; }
-        .product-name a:hover { color: #6366f1; }
-        .product-desc {
-            color: #64748b;
+        .product-hover-price {
             font-size: 0.88rem;
-            line-height: 1.5;
-            margin: 0;
-            flex: 1;
+            font-weight: 600;
+            color: #a5b4fc;
+            letter-spacing: 0.01em;
         }
-        .product-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 0.75rem;
-            padding-top: 0.75rem;
-            border-top: 1px solid #f1f5f9;
-        }
-        .product-price {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: #0f172a;
-        }
-        .product-price small { font-size: 0.75rem; font-weight: 500; color: #64748b; }
-        .product-stock-info {
-            display: flex;
+        .product-hover-cta {
+            display: inline-flex;
             align-items: center;
             gap: 0.4rem;
             font-size: 0.78rem;
-            color: #64748b;
-            font-weight: 500;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            margin-top: 0.25rem;
+            letter-spacing: 0.02em;
         }
 
         /* CTA bas */
@@ -847,27 +850,18 @@
             margin: 0;
         }
 
-        @media (max-width: 640px) {
-            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-            .product-info { padding: 0.9rem; }
-            .product-name { font-size: 0.9rem; }
-            .product-price { font-size: 1rem; }
-            .featured-header { flex-direction: column; align-items: flex-start; }
-        }
     </style>
 
-
-
-    <!-- 5. Offres du Jour Section (Ventes Flash) -->
+        <!-- 5. Offres du Jour Section (Ventes Flash) -->
     <section id="offres-du-jour" class="daily-deals-section">
         <div class="container">
             <!-- Header Section -->
-            <div class="daily-deals-header">
+            <div class="daily-deals-header scroll-reveal-header">
                 <div class="deals-header-left">
                     <span class="deals-badge">
                         <i class="fa-solid fa-bolt-lightning"></i> Vente Flash Exclusive
                     </span>
-                    <h2 class="deals-title">Nos <span class="deals-title-accent">Offres du Jour</span></h2>
+                    <h2 class="deals-title">Nos Offres du Jour</h2>
                     <p class="deals-subtitle">Profitez de réductions exceptionnelles valables aujourd'hui seulement. Stocks très limités !</p>
                 </div>
                 
@@ -909,13 +903,24 @@
                         $economie = $oldPrice - $deal->prix;
                     @endphp
                     
-                    <div class="deal-card animate-fade-up">
+                    <div class="deal-card scroll-reveal-card" style="--reveal-index: {{ $loop->index }};">
                         <div class="deal-card-media">
                             <a href="{{ route('products.show', $deal->id) }}">
                                 <img src="{{ asset($deal->image ?? 'images/placeholder-product.jpg') }}" 
                                      alt="{{ $deal->nom }}" 
                                      class="deal-img">
                             </a>
+
+                            <!-- Bouton Favoris -->
+                            @php $isFavDeal = isset(session('wishlist', [])[$deal->id]); @endphp
+                            <button type="button" 
+                                    class="btn-wishlist-toggle {{ $isFavDeal ? 'active' : '' }}" 
+                                    data-product-id="{{ $deal->id }}" 
+                                    onclick="toggleWishlist({{ $deal->id }}, this)" 
+                                    title="{{ $isFavDeal ? 'Retirer des favoris' : 'Ajouter aux favoris' }}">
+                                <i class="{{ $isFavDeal ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                            </button>
+
                             <div class="deal-badges">
                                 <span class="deal-badge-discount">-{{ $discountPct }}%</span>
                                 <span class="deal-badge-cat">{{ $deal->categorie }}</span>
@@ -1027,6 +1032,19 @@
             margin-bottom: 3.5rem;
             gap: 2rem;
             flex-wrap: wrap;
+        }
+
+        .daily-deals-header.scroll-reveal-header {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        .daily-deals-header.scroll-reveal-header.revealed {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .deals-header-left {
@@ -1148,15 +1166,42 @@
             overflow: hidden;
             border: 1px solid #e2e8f0;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
         }
 
-        .deal-card:hover {
-            transform: translateY(-8px);
+        .deal-card.scroll-reveal-card {
+            opacity: 0;
+            transform: translateY(38px) scale(0.96);
+            transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.35s ease;
+            transition-delay: calc(var(--reveal-index, 0) * 0.12s);
+            will-change: opacity, transform;
+        }
+
+        .deal-card.scroll-reveal-card.revealed {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .deal-card.scroll-reveal-card.revealed:hover {
+            transform: translateY(-8px) scale(1);
             box-shadow: 0 20px 35px -10px rgba(15, 23, 42, 0.15);
             border-color: #cbd5e1;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.35s ease,
+                        border-color 0.35s ease;
+            transition-delay: 0s !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .scroll-reveal-header,
+            .scroll-reveal-card {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
         }
 
         /* Media */
@@ -1549,6 +1594,44 @@
 
             updateCountdown();
             setInterval(updateCountdown, 1000);
+        })();
+    </script>
+
+    <!-- Script Animation Fluide au Scroll pour la Section Produits -->
+    <script>
+        (function () {
+            const revealItems = document.querySelectorAll('.scroll-reveal-header, .scroll-reveal-card');
+            if (!revealItems.length) return;
+
+            if ('IntersectionObserver' in window) {
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px 0px -40px 0px',
+                    threshold: 0.1
+                };
+
+                const revealObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('revealed');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, observerOptions);
+
+                revealItems.forEach(item => {
+                    // Si l'élément est déjà visible dans le viewport dès le chargement (ex: ancre d'URL ou refresh)
+                    const rect = item.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        item.classList.add('revealed');
+                    } else {
+                        revealObserver.observe(item);
+                    }
+                });
+            } else {
+                // Fallback pour navigateurs anciens
+                revealItems.forEach(item => item.classList.add('revealed'));
+            }
         })();
     </script>
 @endsection
